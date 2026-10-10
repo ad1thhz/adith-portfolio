@@ -194,8 +194,21 @@ footer a:hover { color: var(--fg); }
 .js .noanim, .js .noanim .wi { transition: none !important; }
 
 /* certifications */
-.cert-viewer { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: clamp(24px, 4vw, 64px); align-items: center; margin-bottom: clamp(28px, 4vw, 48px); }
-.cert-viewer .frame { aspect-ratio: 4 / 3; }
+
+/* Certifications: portrait certificate layout */
+.cert-viewer {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(24px, 4vw, 64px);
+  align-items: center;
+  margin-bottom: clamp(28px, 4vw, 48px);
+}
+.cert-viewer .frame { width: 100%;max-width: 420px;aspect-ratio: 3 / 4;justify-self: center;overflow: hidden; }
+.cert-viewer .frame img { width: 100%;height: 100%;object-fit: contain; }
+/* Mobile layout */
+@media (max-width: 899px) {
+.cert-viewer { grid-template-columns: minmax(0, 1fr); }
+.cert-viewer .frame { max-width: 360px; }}
 .cert-info { display: grid; gap: 14px; min-width: 0; }
 .cert-info h3 { font-size: clamp(1.5rem, 3vw, 2.25rem); }
 .cert-info dl { margin: 0; border-top: 1px solid var(--line); }
@@ -386,10 +399,10 @@ footer a:hover { color: var(--fg); }
         <div class="card-meta">
           <div>
             <h3>Project four <span class="arrow" aria-hidden="true">↗</span></h3>
-            <p class="desc">One line on the problem you solved and the result.</p>
+            <p class="desc">Minimalist dashboard for a tech cafe.</p>
             <div class="tags"><span class="tag">SaaS dashboard</span><span class="tag">Prototype</span></div>
           </div>
-          <span class="year">20XX</span>
+          <span class="year">2026</span>
         </div>
       </button>
     </div>
@@ -414,10 +427,10 @@ footer a:hover { color: var(--fg); }
       <p class="mono">Four stages</p>
     </div>
     <div class="steps">
-      <div class="step"><span class="mono">01 · Discover</span><h3>Understand</h3><p>Describe how you learn about the people, the goals and the constraints.</p></div>
-      <div class="step"><span class="mono">02 · Define</span><h3>Frame</h3><p>Describe how you turn findings into a clear problem and a plan.</p></div>
-      <div class="step"><span class="mono">03 · Design</span><h3>Explore</h3><p>Describe how you sketch, prototype and test ideas with users.</p></div>
-      <div class="step"><span class="mono">04 · Deliver</span><h3>Ship</h3><p>Describe how you hand off to developers and measure the result.</p></div>
+      <div class="step"><span class="mono">01 · Discover</span><h3>Understand</h3><p>I learn about users through research, interviews, and observation to understand their needs, goals, and constraints.</p></div>
+      <div class="step"><span class="mono">02 · Define</span><h3>Frame</h3><p>I analyze research findings to define the core problem, prioritize user needs, and create a clear design plan.</p></div>
+      <div class="step"><span class="mono">03 · Design</span><h3>Explore</h3><p>I sketch ideas, create wireframes, interactive prototypes, and test them with users to gather feedback and improve the design.</p></div>
+      <div class="step"><span class="mono">04 · Deliver</span><h3>Deploy</h3><p>I provide developers with clear design specs and assets, then measure success through user feedback and performance metrics.</p></div>
     </div>
   </section>
 
@@ -504,13 +517,13 @@ footer a:hover { color: var(--fg); }
   </div>
   <div class="wrap cs-body">
     <div class="cs-head">
-      <p class="mono">[Category] · 20XX</p>
+      <p class="mono">[Category] · 2026</p>
       <h2 class="title" id="cs-title">Project title</h2>
       <dl class="cs-meta">
-        <div><dt>Role</dt><dd>[Your role]</dd></div>
-        <div><dt>Timeline</dt><dd>[X weeks]</dd></div>
-        <div><dt>Team</dt><dd>[Team size]</dd></div>
-        <div><dt>Tools</dt><dd>[Figma, ...]</dd></div>
+        <div><dt>Role</dt><dd>UI/UX Designer</dd></div>
+        <div><dt>Timeline</dt><dd>3 weeks</dd></div>
+        <div><dt>Team</dt><dd>0</dd></div>
+        <div><dt>Tools</dt><dd>Figma, Reve, NotebookLm, Photoshop</dd></div>
       </dl>
     </div>
     <div class="frame r-21-9"><span>Hero image · 21:9</span></div>
@@ -616,10 +629,10 @@ footer a:hover { color: var(--fg); }
   /* ---- certifications ----
      Edit this list: image path, name, issuer, credential id, credential url (leave url '' if none). */
   var CERTS = [
-    { img: 'Images/cert-1.png', name: 'Certificate name 1', issuer: 'Issuer', id: 'CREDENTIAL-ID-001', url: 'https://example.com/verify/001' },
-    { img: 'Images/cert-2.png', name: 'Certificate name 2', issuer: 'Issuer', id: 'CREDENTIAL-ID-002', url: 'https://example.com/verify/002' },
-    { img: 'Images/cert-3.png', name: 'Certificate name 3', issuer: 'Issuer', id: 'CREDENTIAL-ID-003', url: '' },
-    { img: 'Images/cert-4.png', name: 'Certificate name 4', issuer: 'Issuer', id: 'CREDENTIAL-ID-004', url: '' }
+    { img: 'Images/certificate (1).png', name: 'Jr.UI/UX Intern', issuer: 'Knovista Technologies', id: 'KNV/IN/2026/0336', url: '' },
+    { img: 'Images/certificate (2).png', name: 'Basics of UI/UX Strategy', issuer: 'UNIATHENA', id: '6802-0288-0297', url: 'https://uniathena.com/verify/certificate?certID=6802-0288-0297' },
+    { img: 'Images/certificate (3).png', name: 'Photoshop for begginers', issuer: 'Cursa', id: 'e5e410e29298a7537cc50de06a287ed1', url: '' },
+    { img: 'Images/certificate (4).png', name: 'Prompt Engineering', issuer: '1 Million Prompters', id: '', url: 'https://omp.dub.ai/certificate/CGaphYrBtPCr' }
   ];
   var certFrame = $('#cert-frame'), certThumbs = $('#cert-thumbs');
   function certImg(c, alt) {
@@ -686,7 +699,7 @@ footer a:hover { color: var(--fg); }
       .catch(function () { likeErr.textContent = 'Could not save your like right now. Please try again.'; })
       .then(function () { likeSubmit.disabled = false; });
   }
-  likeBtn.addEventListener('click', function () { if (!liked()) openModal(); });
+  likeBtn.addEventListener('click', function () { openModal(); });
   $('#like-form').addEventListener('submit', function (e) { e.preventDefault(); sendLike(likeName.value.trim()); });
   $('#like-skip').addEventListener('click', function () { sendLike(''); });
   modal.addEventListener('click', function (e) { if (e.target === modal) closeModal(); });
