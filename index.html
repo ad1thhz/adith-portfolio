@@ -362,14 +362,14 @@ footer a:hover { color: var(--fg); }
     </div>
     <div class="work-grid">
       <button type="button" class="card wide" data-project="Project one" aria-label="Open case study: Project one">
-        <div class="frame r-16-10"><span>Cover image · 16:10</span></div>
+        <div class="frame r-16-10"><img src="Images/Byte & Bean.png"></div>
         <div class="card-meta">
           <div>
             <h3>Project one <span class="arrow" aria-hidden="true">↗</span></h3>
-            <p class="desc">One line on the problem you solved and the result.</p>
+            <p class="desc">Simplified the experience for tech professionals by combining café food ordering, table reservations, and on-site tech support into one convenient app.</p>
             <div class="tags"><span class="tag">Mobile app</span><span class="tag">Research</span><span class="tag">UI</span></div>
           </div>
-          <span class="year">20XX</span>
+          <span class="year">2026</span>
         </div>
       </button>
       <button type="button" class="card narrow offset" data-project="Project two" aria-label="Open case study: Project two">
@@ -380,8 +380,8 @@ footer a:hover { color: var(--fg); }
             <p class="desc">One line on the problem you solved and the result.</p>
             <div class="tags"><span class="tag">Web platform</span><span class="tag">UX</span></div>
           </div>
-          <span class="year">20XX</span>
-        </div>
+          <span class="year">2026</span>
+        </div>  
       </button>
       <button type="button" class="card narrow" data-project="Project three" aria-label="Open case study: Project three">
         <div class="frame r-4-5"><span>Cover image · 4:5</span></div>
@@ -472,7 +472,7 @@ footer a:hover { color: var(--fg); }
     <h2 id="contact-title">Have a project in mind?</h2>
     <div class="mail-row">
       <span class="mail" id="mail-text">adithms32@gmail.com</span>
-      <button type="button" class="btn ghost" id="copy-btn">Copy email</button>
+      <a class="btn ghost" href="https://mail.google.com/mail/?view=cm&fs=1&to=adithms32@gmail.com" target="_blank" rel="noopener">Send email</a>
     </div>
     <div class="socials">
       <a href="https://www.linkedin.com/in/ad1thhms19032005/?isSelfProfile=true" target="_blank" rel="noopener">LinkedIn <span aria-hidden="true">↗</span></a>
@@ -509,16 +509,17 @@ footer a:hover { color: var(--fg); }
   <a class="mono" href="#top">Back to top ↑</a>
 </footer>
 
-<!-- Case study frame, opens when a project card is clicked -->
-<div class="cs" id="cs" role="dialog" aria-modal="true" aria-labelledby="cs-title" hidden>
+<!-- Four independent case studies: each project has its own editable content block. -->
+<!-- Independent case study: Project one. Edit only this block for this project. -->
+<div class="cs" id="cs-project-one" data-project="Project one" role="dialog" aria-modal="true" aria-labelledby="cs-project-one-title" hidden>
   <div class="cs-bar">
     <span class="mono">Case study</span>
-    <button type="button" class="btn ghost" id="cs-close">Close <span aria-hidden="true">✕</span></button>
+    <button type="button" class="btn ghost cs-close" id="cs-project-one-close">Close <span aria-hidden="true">✕</span></button>
   </div>
   <div class="wrap cs-body">
     <div class="cs-head">
-      <p class="mono">[Category] · 2026</p>
-      <h2 class="title" id="cs-title">Project title</h2>
+      <p class="mono">[Mobile App] · 2026</p>
+      <h2 class="title" id="cs-project-one-title">Byte & Bean Tech Café</h2>
       <dl class="cs-meta">
         <div><dt>Role</dt><dd>UI/UX Designer</dd></div>
         <div><dt>Timeline</dt><dd>3 weeks</dd></div>
@@ -526,7 +527,74 @@ footer a:hover { color: var(--fg); }
         <div><dt>Tools</dt><dd>Figma, Reve, NotebookLm, Photoshop</dd></div>
       </dl>
     </div>
-    <div class="frame r-21-9"><span>Hero image · 21:9</span></div>
+    <div class="frame r-21-9"><img src="Images/Frame 92.1.png"></div>
+    <div class="cs-sec">
+      <h3>Overview</h3>
+      <div class="txt">
+        <p class="big">Byte & Bean brings café ordering, table reservations, and practical tech assistance together for people who work in tech.</p>
+        <p>A tech café concept designed to help professionals enjoy good coffee, find a comfortable seat, and get basic technical help in one place.</p>
+      </div>
+    </div>
+    <div class="cs-sec">
+      <h3>The problem</h3>
+      <div class="txt">
+        <p>Tech professionals may need a place to work, food and drinks, or quick technical help, but these needs are often handled separately.</p>
+      </div>
+    </div>
+    <div class="cs-sec">
+      <h3>Research</h3>
+      <div class="txt">
+        <p>Explore how people use cafés while working, what makes reserving a seat easier, and which tech-support tasks they need most.</p>
+        <div class="frame r-16-10"><img src="Images/Survey.png"></div>
+      </div>
+    </div>
+    <div class="cs-sec">
+      <h3>Design solution</h3>
+      <div class="txt">
+        <p>A clear home screen brings food ordering, table reservations, and tech assistance forward as the three main actions.</p>
+        <div class="cs-pair">
+          <div class="frame r-4-5"><img src="Images/screen1pro1.png"></div>
+          <div class="frame r-4-5"><img src="Images/screen2pro1.png"></div>
+        </div>
+      </div>
+    </div>
+    <div class="cs-sec">
+      <h3>Outcome</h3>
+      <div class="txt" style="max-width:none">
+        <p>The concept combines the key tech-café services into one straightforward mobile experience.</p>
+        <div class="cs-results">
+          <div><b>03</b><small>Core Services</small></div>
+          <div><b>1.0x</b><small>Unified Experience</small></div>
+          <div><b>12+</b><small>App Screens</small></div>
+        </div>
+      </div>
+    </div>
+    <div class="cs-next">
+      <p class="mono">Next project</p>
+      <button type="button" class="btn" id="cs-project-one-back">Back to all work <span aria-hidden="true">↑</span></button>
+    </div>
+  </div>
+
+</div>
+
+<!-- Independent case study: Project two. Edit only this block for this project. -->
+<div class="cs" id="cs-project-two" data-project="Project two" role="dialog" aria-modal="true" aria-labelledby="cs-project-two-title" hidden>
+  <div class="cs-bar">
+    <span class="mono">Case study</span>
+    <button type="button" class="btn ghost cs-close" id="cs-project-two-close">Close <span aria-hidden="true">✕</span></button>
+  </div>
+  <div class="wrap cs-body">
+    <div class="cs-head">
+      <p class="mono">[Web Platform] · 2026</p>
+      <h2 class="title" id="cs-project-two-title">Project two</h2>
+      <dl class="cs-meta">
+        <div><dt>Role</dt><dd>UI/UX Designer</dd></div>
+        <div><dt>Timeline</dt><dd>3 weeks</dd></div>
+        <div><dt>Team</dt><dd>0</dd></div>
+        <div><dt>Tools</dt><dd>Figma, Reve, NotebookLm, Photoshop</dd></div>
+      </dl>
+    </div>
+    <div class="frame r-21-9"><img src="Images/Frame 92.1.png"></div>
     <div class="cs-sec">
       <h3>Overview</h3>
       <div class="txt">
@@ -570,9 +638,144 @@ footer a:hover { color: var(--fg); }
     </div>
     <div class="cs-next">
       <p class="mono">Next project</p>
-      <button type="button" class="btn" id="cs-back">Back to all work <span aria-hidden="true">↑</span></button>
+      <button type="button" class="btn" id="cs-project-two-back">Back to all work <span aria-hidden="true">↑</span></button>
     </div>
   </div>
+
+</div>
+
+<!-- Independent case study: Project three. Edit only this block for this project. -->
+<div class="cs" id="cs-project-three" data-project="Project three" role="dialog" aria-modal="true" aria-labelledby="cs-project-three-title" hidden>
+  <div class="cs-bar">
+    <span class="mono">Case study</span>
+    <button type="button" class="btn ghost cs-close" id="cs-project-three-close">Close <span aria-hidden="true">✕</span></button>
+  </div>
+  <div class="wrap cs-body">
+    <div class="cs-head">
+      <p class="mono">[Design System] · 2026</p>
+      <h2 class="title" id="cs-project-three-title">Project three</h2>
+      <dl class="cs-meta">
+        <div><dt>Role</dt><dd>UI/UX Designer</dd></div>
+        <div><dt>Timeline</dt><dd>3 weeks</dd></div>
+        <div><dt>Team</dt><dd>0</dd></div>
+        <div><dt>Tools</dt><dd>Figma, Reve, NotebookLm, Photoshop</dd></div>
+      </dl>
+    </div>
+    <div class="frame r-21-9"><img src="Images/Frame 92.1.png"></div>
+    <div class="cs-sec">
+      <h3>Overview</h3>
+      <div class="txt">
+        <p class="big">One or two sentences summing up the project and what changed because of it.</p>
+        <p>A short paragraph on the client, the product and your part in it.</p>
+      </div>
+    </div>
+    <div class="cs-sec">
+      <h3>The problem</h3>
+      <div class="txt">
+        <p>What was not working for users or for the business, and how you knew.</p>
+      </div>
+    </div>
+    <div class="cs-sec">
+      <h3>Research</h3>
+      <div class="txt">
+        <p>Methods, participants and the key insights you found.</p>
+        <div class="frame r-16-10"><span>Research image · 16:10</span></div>
+      </div>
+    </div>
+    <div class="cs-sec">
+      <h3>Design solution</h3>
+      <div class="txt">
+        <p>The main decisions you made and why. Add screens, flows and prototypes below.</p>
+        <div class="cs-pair">
+          <div class="frame r-4-5"><span>Screen · 4:5</span></div>
+          <div class="frame r-4-5"><span>Screen · 4:5</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="cs-sec">
+      <h3>Outcome</h3>
+      <div class="txt" style="max-width:none">
+        <p>What improved, with numbers where you have them.</p>
+        <div class="cs-results">
+          <div><b>00%</b><small>Metric label</small></div>
+          <div><b>0.0x</b><small>Metric label</small></div>
+          <div><b>00</b><small>Metric label</small></div>
+        </div>
+      </div>
+    </div>
+    <div class="cs-next">
+      <p class="mono">Next project</p>
+      <button type="button" class="btn" id="cs-project-three-back">Back to all work <span aria-hidden="true">↑</span></button>
+    </div>
+  </div>
+
+</div>
+
+<!-- Independent case study: Project four. Edit only this block for this project. -->
+<div class="cs" id="cs-project-four" data-project="Project four" role="dialog" aria-modal="true" aria-labelledby="cs-project-four-title" hidden>
+  <div class="cs-bar">
+    <span class="mono">Case study</span>
+    <button type="button" class="btn ghost cs-close" id="cs-project-four-close">Close <span aria-hidden="true">✕</span></button>
+  </div>
+  <div class="wrap cs-body">
+    <div class="cs-head">
+      <p class="mono">[SaaS Dashboard] · 2026</p>
+      <h2 class="title" id="cs-project-four-title">Project four</h2>
+      <dl class="cs-meta">
+        <div><dt>Role</dt><dd>UI/UX Designer</dd></div>
+        <div><dt>Timeline</dt><dd>3 weeks</dd></div>
+        <div><dt>Team</dt><dd>0</dd></div>
+        <div><dt>Tools</dt><dd>Figma, Reve, NotebookLm, Photoshop</dd></div>
+      </dl>
+    </div>
+    <div class="frame r-21-9"><img src="Images/Frame 92.1.png"></div>
+    <div class="cs-sec">
+      <h3>Overview</h3>
+      <div class="txt">
+        <p class="big">One or two sentences summing up the project and what changed because of it.</p>
+        <p>A short paragraph on the client, the product and your part in it.</p>
+      </div>
+    </div>
+    <div class="cs-sec">
+      <h3>The problem</h3>
+      <div class="txt">
+        <p>What was not working for users or for the business, and how you knew.</p>
+      </div>
+    </div>
+    <div class="cs-sec">
+      <h3>Research</h3>
+      <div class="txt">
+        <p>Methods, participants and the key insights you found.</p>
+        <div class="frame r-16-10"><span>Research image · 16:10</span></div>
+      </div>
+    </div>
+    <div class="cs-sec">
+      <h3>Design solution</h3>
+      <div class="txt">
+        <p>The main decisions you made and why. Add screens, flows and prototypes below.</p>
+        <div class="cs-pair">
+          <div class="frame r-4-5"><span>Screen · 4:5</span></div>
+          <div class="frame r-4-5"><span>Screen · 4:5</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="cs-sec">
+      <h3>Outcome</h3>
+      <div class="txt" style="max-width:none">
+        <p>What improved, with numbers where you have them.</p>
+        <div class="cs-results">
+          <div><b>00%</b><small>Metric label</small></div>
+          <div><b>0.0x</b><small>Metric label</small></div>
+          <div><b>00</b><small>Metric label</small></div>
+        </div>
+      </div>
+    </div>
+    <div class="cs-next">
+      <p class="mono">Next project</p>
+      <button type="button" class="btn" id="cs-project-four-back">Back to all work <span aria-hidden="true">↑</span></button>
+    </div>
+  </div>
+
 </div>
 
 <script>
@@ -605,26 +808,30 @@ footer a:hover { color: var(--fg); }
     } catch (err) { fallback(); }
   });
 
-  var cs = $('#cs'), csTitle = $('#cs-title'), lastFocus = null;
+  var activeCase = null, lastFocus = null;
   function openCase(name, trigger) {
     lastFocus = trigger;
-    csTitle.textContent = name;
-    cs.hidden = false;
-    cs.scrollTop = 0;
+    activeCase = document.querySelector('.cs[data-project="' + name + '"]');
+    if (!activeCase) return;
+    activeCase.hidden = false;
+    activeCase.scrollTop = 0;
     document.documentElement.style.overflow = 'hidden';
-    $('#cs-close').focus();
+    activeCase.querySelector('.cs-close').focus();
   }
   function closeCase() {
-    cs.hidden = true;
+    if (!activeCase) return;
+    activeCase.hidden = true;
+    activeCase = null;
     document.documentElement.style.overflow = '';
     if (lastFocus) lastFocus.focus();
   }
   document.querySelectorAll('.card').forEach(function (c) {
     c.addEventListener('click', function () { openCase(c.getAttribute('data-project'), c); });
   });
-  $('#cs-close').addEventListener('click', closeCase);
-  $('#cs-back').addEventListener('click', closeCase);
-  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !cs.hidden) closeCase(); });
+  document.querySelectorAll('.cs-close, .cs-next button').forEach(function (b) {
+    b.addEventListener('click', closeCase);
+  });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && activeCase) closeCase(); });
 
   /* ---- certifications ----
      Edit this list: image path, name, issuer, credential id, credential url (leave url '' if none). */
