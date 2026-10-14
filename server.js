@@ -37,7 +37,15 @@ const MIME = {
   '.gif': 'image/gif', '.pdf': 'application/pdf'
 };
 
+// Helper to include CORS headers so Vercel can talk to Render
+function setCorsHeaders(res) {
+  res.setHeader('Access-Control-Allow-Origin', '*'); // Or specify your Vercel domain
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+}
+
 function json(res, code, obj) {
+  setCorsHeaders(res);
   res.writeHead(code, { 'Content-Type': 'application/json' });
   res.end(JSON.stringify(obj));
 }
@@ -45,12 +53,21 @@ function json(res, code, obj) {
 function serveFile(res, file) {
   fs.readFile(file, (err, buf) => {
     if (err) { res.writeHead(404); return res.end('Not found'); }
+    setCorsHeaders(res);
     res.writeHead(200, { 'Content-Type': MIME[path.extname(file).toLowerCase()] || 'application/octet-stream' });
     res.end(buf);
   });
 }
 
 const server = http.createServer((req, res) => {
+  // Handle browser preflight OPTIONS requests
+  if (req.method === 'OPTIONS') {
+    setCorsHeaders(res);
+    res.writeHead(204);
+    res.end();
+    return;
+  }
+
   const url = new URL(req.url, 'http://localhost');
   const p = decodeURIComponent(url.pathname);
 
@@ -79,6 +96,7 @@ const server = http.createServer((req, res) => {
       if (file.startsWith(path.join(__dirname, 'Images') + path.sep)) return serveFile(res, file);
     }
   }
+  setCorsHeaders(res);
   res.writeHead(404); res.end('Not found');
 });
 
