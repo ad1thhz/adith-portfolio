@@ -82,5 +82,6 @@ const server = http.createServer((req, res) => {
   res.writeHead(404); res.end('Not found');
 });
 
-const port = process.env.PORT || 3000;
-server.listen(port, () => console.log(`Portfolio running at http://localhost:${port}`));
+const PORT = process.env.PORT || 3000;
+  app.listen(PORT, () => {console.log(`Server is running on port ${PORT}`);
+});
