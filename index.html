@@ -806,6 +806,9 @@ footer a:hover { color: var(--fg); }
 (function () {
   var $ = function (s) { return document.querySelector(s); };
 
+  // Your live Render backend URL
+  var API_BASE_URL = 'https://adith-portfolio-basi.onrender.com';
+
   $('#year').textContent = new Date().getFullYear();
 
   var menuBtn = $('#menu-btn'), menu = $('#mobile-menu');
@@ -912,7 +915,7 @@ footer a:hover { color: var(--fg); }
   }
   function renderCount(n) { likeCount.textContent = n + (n === 1 ? ' like' : ' likes'); }
   function loadCount() {
-    fetch('/api/likes').then(function (r) { return r.json(); })
+    fetch(API_BASE_URL + '/api/likes').then(function (r) { return r.json(); })
       .then(function (d) { renderCount(d.count); })
       .catch(function () { likeCount.textContent = ''; });
   }
@@ -922,7 +925,7 @@ footer a:hover { color: var(--fg); }
   function closeModal() { modal.hidden = true; likeBtn.focus(); }
   function sendLike(name) {
     likeSubmit.disabled = true;
-    return fetch('/api/like', {
+    return fetch(API_BASE_URL + '/api/like', {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ name: name })
     }).then(function (r) { if (!r.ok) throw new Error(); return r.json(); })
