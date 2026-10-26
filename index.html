@@ -158,6 +158,65 @@ blockquote { margin: 0; font-family: var(--font-display); font-size: clamp(1.5re
 footer { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; padding-block: 28px; border-top: 1px solid var(--line); }
 footer a:hover { color: var(--fg); }
 
+/* UI/UX heading uses the same .sec-head style as Poster design; add breathing room under "Selected work" */
+#work > .sec-head + .sec-head { padding-top: clamp(16px, 3vw, 40px); }
+#work > .sec-head + .sec-head h2 { font-size: clamp(1.75rem, 4vw, 3rem); }
+/* (legacy) UI/UX sub-heading */
+.sub-head { display: flex; align-items: center; gap: 16px; padding-bottom: clamp(24px, 3vw, 36px); }
+.sub-head h3 { font-size: clamp(1.25rem, 2.4vw, 1.75rem); font-weight: 500; }
+.sub-head::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+
+/* UI/UX projects as bento tiles */
+.work-grid.bento { gap: clamp(12px, 2vw, 24px); align-items: stretch; }
+.work-grid.bento .card { background: var(--surface); border: 1px solid var(--line); border-radius: 20px; padding: clamp(12px, 1.6vw, 20px); gap: 18px; transition: border-color .3s, background .3s; }
+.work-grid.bento .card:hover { border-color: var(--muted); background: var(--surface-2); }
+.work-grid.bento .card .frame { aspect-ratio: 16 / 10; border-radius: 12px; }
+.work-grid.bento .card.narrow.offset { margin-top: 0; }
+.work-grid.bento .card-meta { padding-inline: 4px; padding-bottom: 4px; }
+@media (min-width: 900px) {
+  .work-grid.bento .card .frame { flex: 1 1 auto; aspect-ratio: auto; min-height: clamp(260px, 30vw, 440px); }
+  .work-grid.bento .card-meta { flex: none; }
+}
+
+/* poster design: bento grid + floating loop */
+/* Posters keep their own width/height: images render at natural aspect ratio (portrait friendly), never cropped. */
+.poster-bento { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: clamp(12px, 2vw, 24px); align-items: start; }
+.poster { margin: 0; min-width: 0; }
+.poster .frame { display: block; height: auto; aspect-ratio: auto; will-change: transform; animation: posterFloat var(--dur, 6s) ease-in-out var(--delay, 0s) infinite; transition: border-color .3s; }
+.poster .frame:not(:has(img)) { aspect-ratio: 3 / 4; display: grid; }
+.poster .frame img { position: relative; inset: auto; width: 100%; height: auto; object-fit: contain; display: block; }
+.poster:hover .frame { border-color: var(--accent); animation-play-state: paused; }
+.poster img { transition: transform .6s cubic-bezier(.2,.7,.2,1); }
+.poster:hover img { transform: scale(1.03); }
+.poster-bento .p1 { --dur: 7s; --delay: 0s; }
+.poster-bento .p2 { --dur: 6s; --delay: -1.5s; margin-top: clamp(24px, 6vw, 80px); }
+.poster-bento .p3 { --dur: 5.5s; --delay: -3s; }
+.poster-bento .p4 { --dur: 6.5s; --delay: -4.5s; margin-top: clamp(24px, 6vw, 80px); }
+@keyframes posterFloat {
+  0%, 100% { transform: translate3d(0, 0, 0) rotate(0deg); }
+  25% { transform: translate3d(0, -8px, 0) rotate(.4deg); }
+  50% { transform: translate3d(0, -14px, 0) rotate(0deg); }
+  75% { transform: translate3d(0, -6px, 0) rotate(-.4deg); }
+}
+.more-wrap { display: flex; justify-content: center; padding-top: clamp(28px, 4vw, 48px); }
+.more-btn svg { width: 16px; height: 16px; transition: transform .3s; }
+.more-btn[aria-expanded="true"] svg { transform: rotate(180deg); }
+.poster-more { column-width: 220px; column-gap: clamp(12px, 2vw, 24px); padding-top: clamp(28px, 4vw, 48px); }
+.poster-more[hidden] { display: none !important; }
+.poster-more .poster { break-inside: avoid; margin-bottom: clamp(16px, 2.4vw, 28px); }
+.poster-more .poster:nth-child(4n+1) { --dur: 6s; --delay: -0.5s; }
+.poster-more .poster:nth-child(4n+2) { --dur: 7s; --delay: -2s; }
+.poster-more .poster:nth-child(4n+3) { --dur: 5.5s; --delay: -3.5s; }
+.poster-more .poster:nth-child(4n+4) { --dur: 6.5s; --delay: -5s; }
+@media (max-width: 899px) {
+  .poster-bento { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .poster-bento .p2, .poster-bento .p4 { margin-top: clamp(20px, 7vw, 56px); }
+  .poster-bento .p3 { margin-top: 0; }
+}
+@media (max-width: 480px) {
+  .poster-more { column-count: 2; column-width: auto; }
+}
+
 /* case study overlay */
 .cs { position: fixed; inset: 0; z-index: 50; background: var(--bg); overflow-y: auto; padding-inline: var(--gutter); padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
 .cs-bar { position: sticky; top: 0; z-index: 2; display: flex; justify-content: space-between; align-items: center; gap: 16px; height: 64px; background: var(--bg); border-bottom: 1px solid var(--line); margin-inline: calc(var(--gutter) * -1); padding-inline: var(--gutter); }
@@ -362,7 +421,11 @@ footer a:hover { color: var(--fg); }
       <h2 id="work-title">Selected work</h2>
       <p class="mono">04 projects · 2026</p>
     </div>
-    <div class="work-grid">
+    <div class="sec-head">
+      <h2 id="uiux-title">UI/UX</h2>
+      <p class="mono">Case studies</p>
+    </div>
+    <div class="work-grid bento">
       <button type="button" class="card wide" data-project="Project one" aria-label="Open case study: Project one">
         <div class="frame r-16-10"><img src="Images/Byte & Bean.png"></div>
         <div class="card-meta">
@@ -406,6 +469,33 @@ footer a:hover { color: var(--fg); }
           </div>
           <span class="year">2026</span>
         </div>
+      </button>
+    </div>
+  </section>
+
+  <section class="block" id="posters" aria-labelledby="posters-title">
+    <div class="sec-head">
+      <h2 id="posters-title">Poster design</h2>
+      <p class="mono">Selected posters</p>
+    </div>
+    <!-- Featured 4 posters. Replace the image paths below with your own poster files. -->
+    <div class="poster-bento">
+      <figure class="poster p1"><div class="frame"><span>Poster 01</span><img src="Images/Poster1.jpg" alt="Poster design 1" loading="lazy" onerror="this.remove()"></div></figure>
+      <figure class="poster p2"><div class="frame"><span>Poster 02</span><img src="Images/Poster2.jpg" alt="Poster design 2" loading="lazy" onerror="this.remove()"></div></figure>
+      <figure class="poster p3"><div class="frame"><span>Poster 03</span><img src="Images/Poster3.jpg" alt="Poster design 3" loading="lazy" onerror="this.remove()"></div></figure>
+      <figure class="poster p4"><div class="frame"><span>Poster 04</span><img src="Images/Poster4.jpg" alt="Poster design 4" loading="lazy" onerror="this.remove()"></div></figure>
+    </div>
+    <!-- Remaining posters live here. Copy a <figure> line to add more. The More / Show less button sits below them. -->
+    <div class="poster-more" id="more-posters" hidden>
+      <figure class="poster"><div class="frame"><span>Poster 05</span><img src="Images/poster5.png" alt="Poster design 5" loading="lazy" onerror="this.remove()"></div></figure>
+      <figure class="poster"><div class="frame"><span>Poster 06</span><img src="Images/poster6.png" alt="Poster design 6" loading="lazy" onerror="this.remove()"></div></figure>
+      <!-- <figure class="poster"><div class="frame"><span>Poster 07</span><img src="Images/poster7.png" alt="Poster design 7" loading="lazy" onerror="this.remove()"></div></figure>
+      <figure class="poster"><div class="frame"><span>Poster 08</span><img src="Images/poster8.png" alt="Poster design 8" loading="lazy" onerror="this.remove()"></div></figure> -->
+    </div>
+    <div class="more-wrap">
+      <button type="button" class="btn ghost more-btn" id="more-posters-btn" aria-expanded="false" aria-controls="more-posters">
+        <span id="more-posters-label">More posters</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
       </button>
     </div>
   </section>
@@ -986,6 +1076,15 @@ footer a:hover { color: var(--fg); }
   modal.addEventListener('click', function (e) { if (e.target === modal) closeModal(); });
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !modal.hidden) closeModal(); });
 
+  /* ---- poster design: show / hide the remaining posters ---- */
+  var moreBtn = $('#more-posters-btn'), moreBox = $('#more-posters'), moreLabel = $('#more-posters-label');
+  moreBtn.addEventListener('click', function () {
+    var open = moreBox.hidden;
+    moreBox.hidden = !open;
+    moreBtn.setAttribute('aria-expanded', String(open));
+    moreLabel.textContent = open ? 'Show less' : 'More posters';
+  });
+
   var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   /* ---- scroll animation (loops in both directions) ---- */
@@ -1017,7 +1116,8 @@ footer a:hover { color: var(--fg); }
 
   var targets = [].slice.call(document.querySelectorAll(
     '.split, .hero .status, .hero-foot > *, .sec-head .mono, .card, .about .frame, .about-copy > *, ' +
-    '.row, .step, blockquote, .who, .contact > .mono, .mail-row, .socials, .cert-viewer, .cert-thumb, .like-wrap'
+    '.row, .step, blockquote, .who, .contact > .mono, .mail-row, .socials, .cert-viewer, .cert-thumb, .like-wrap, ' +
+    '.sub-head, .poster, .more-wrap'
   ));
   targets.forEach(function (el) { if (!el.classList.contains('split')) el.classList.add('rv'); });
 
