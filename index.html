@@ -339,6 +339,56 @@ footer a:hover { color: var(--fg); }
 @media (prefers-reduced-motion: reduce) {
   * { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
 }
+
+/* ===== Ultra-smooth scrolling (Lenis) ===== */
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+.lenis.lenis-stopped { overflow: hidden; }
+
+/* ===== Alternating section theme: black / white / black / white ... ===== */
+main > section {
+  background: var(--bg);
+  color: var(--fg);
+  box-shadow: 0 0 0 100vmax var(--bg);
+  clip-path: inset(0 -100vmax);
+}
+main > section, main > section.block { border-top: 0; }
+main > section:nth-of-type(even) {
+  --bg: #ffffff;
+  --surface: #f3f3f1;
+  --surface-2: #e9e9e6;
+  --line: #dcdcd8;
+  --fg: #0a0a0a;
+  --muted: #666666;
+  --accent: #0a0a0a;
+  --on-accent: #ffffff;
+  color-scheme: light;
+}
+footer { background: #000; color: #f4f4f2; box-shadow: 0 0 0 100vmax #000; clip-path: inset(0 -100vmax); }
+
+/* ===== Projects: images keep their actual size/ratio on every screen ===== */
+.work-grid.bento { align-items: start; }
+.work-grid.bento .card .frame {
+  display: block;
+  flex: none;
+  aspect-ratio: auto;
+  min-height: 0;
+  height: auto;
+}
+.work-grid.bento .card .frame img,
+.cs .frame img {
+  position: relative;
+  inset: auto;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  display: block;
+}
+.cs .frame { display: block; aspect-ratio: auto; height: auto; }
+
+/* ===== Parallax stacking: each menu section slides up over the previous one ===== */
+main > section { position: sticky; top: 0; }
 </style>
 
 <div id="top"></div>
@@ -480,15 +530,15 @@ footer a:hover { color: var(--fg); }
     </div>
     <!-- Featured 4 posters. Replace the image paths below with your own poster files. -->
     <div class="poster-bento">
-      <figure class="poster p1"><div class="frame"><span>Poster 01</span><img src="Images/Poster1.jpg" alt="Poster design 1" loading="lazy" onerror="this.remove()"></div></figure>
-      <figure class="poster p2"><div class="frame"><span>Poster 02</span><img src="Images/Poster2.jpg" alt="Poster design 2" loading="lazy" onerror="this.remove()"></div></figure>
-      <figure class="poster p3"><div class="frame"><span>Poster 03</span><img src="Images/Poster3.jpg" alt="Poster design 3" loading="lazy" onerror="this.remove()"></div></figure>
-      <figure class="poster p4"><div class="frame"><span>Poster 04</span><img src="Images/Poster4.jpg" alt="Poster design 4" loading="lazy" onerror="this.remove()"></div></figure>
+      <figure class="poster p1"><div class="frame"><img src="Images/Poster1.jpg" alt="Poster design 1" loading="lazy" onerror="this.remove()"></div></figure>
+      <figure class="poster p2"><div class="frame"><img src="Images/Poster2.jpg" alt="Poster design 2" loading="lazy" onerror="this.remove()"></div></figure>
+      <figure class="poster p3"><div class="frame"><img src="Images/Poster3.jpg" alt="Poster design 3" loading="lazy" onerror="this.remove()"></div></figure>
+      <figure class="poster p4"><div class="frame"><img src="Images/Poster4.jpg" alt="Poster design 4" loading="lazy" onerror="this.remove()"></div></figure>
     </div>
     <!-- Remaining posters live here. Copy a <figure> line to add more. The More / Show less button sits below them. -->
-    <div class="poster-more" id="more-posters" hidden>
-      <figure class="poster"><div class="frame"><span>Poster 05</span><img src="Images/poster5.png" alt="Poster design 5" loading="lazy" onerror="this.remove()"></div></figure>
-      <figure class="poster"><div class="frame"><span>Poster 06</span><img src="Images/poster6.png" alt="Poster design 6" loading="lazy" onerror="this.remove()"></div></figure>
+    <div class="poster-bento" id="more-posters" hidden>
+      <figure class="poster p1"><div class="frame"><img src="Images/poster5.png" alt="Poster design 5" loading="lazy" onerror="this.remove()"></div></figure>
+      <figure class="poster p2"><div class="frame"><img src="Images/poster6.png" alt="Poster design 6" loading="lazy" onerror="this.remove()"></div></figure>
       <!-- <figure class="poster"><div class="frame"><span>Poster 07</span><img src="Images/poster7.png" alt="Poster design 7" loading="lazy" onerror="this.remove()"></div></figure>
       <figure class="poster"><div class="frame"><span>Poster 08</span><img src="Images/poster8.png" alt="Poster design 8" loading="lazy" onerror="this.remove()"></div></figure> -->
     </div>
@@ -939,6 +989,7 @@ footer a:hover { color: var(--fg); }
 
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.18/dist/lenis.min.js"></script>
 <script>
 (function () {
   var $ = function (s) { return document.querySelector(s); };
@@ -1086,6 +1137,53 @@ footer a:hover { color: var(--fg); }
   });
 
   var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---- ultra-smooth scrolling ---- */
+  var lenis = null;
+  document.querySelectorAll('.cs').forEach(function (el) { el.setAttribute('data-lenis-prevent', ''); });
+  if (!reduce && window.Lenis) {
+    lenis = new Lenis({
+      duration: 1.2,
+      easing: function (t) { return Math.min(1, 1.001 - Math.pow(2, -10 * t)); },
+      smoothWheel: true
+    });
+    (function raf(t) { lenis.raf(t); requestAnimationFrame(raf); })(performance.now());
+  }
+
+  /* anchor links: sections are sticky, so scroll to each section's natural (in-flow) position */
+  var mainEl = document.querySelector('main');
+  function naturalTop(el) {
+    var y = mainEl.getBoundingClientRect().top + (window.scrollY || document.documentElement.scrollTop);
+    for (var p = el.previousElementSibling; p; p = p.previousElementSibling) y += p.offsetHeight;
+    return y;
+  }
+  document.querySelectorAll('a[href^="#"]').forEach(function (a) {
+    a.addEventListener('click', function (e) {
+      var id = a.getAttribute('href');
+      var y = 0;
+      if (id !== '#top') {
+        var t = document.querySelector(id);
+        if (!t) return;
+        y = naturalTop(t);
+      }
+      e.preventDefault();
+      if (lenis) lenis.scrollTo(y); else window.scrollTo({ top: y, behavior: reduce ? 'auto' : 'smooth' });
+    });
+  });
+
+  /* ---- section stacking: tall sections pin with their bottom edge in view, then the next one covers them ---- */
+  var stackEls = [].slice.call(document.querySelectorAll('main > section'));
+  function layoutStack() {
+    var vh = window.innerHeight;
+    stackEls.forEach(function (s) { s.style.top = Math.min(0, vh - s.offsetHeight) + 'px'; });
+  }
+  window.addEventListener('resize', layoutStack);
+  window.addEventListener('load', layoutStack);
+  if ('ResizeObserver' in window) {
+    var ro = new ResizeObserver(layoutStack);
+    stackEls.forEach(function (s) { ro.observe(s); });
+  }
+  layoutStack();
 
   /* ---- scroll animation (loops in both directions) ---- */
   if (reduce || !('IntersectionObserver' in window)) return;
