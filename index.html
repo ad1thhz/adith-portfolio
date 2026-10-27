@@ -26,7 +26,7 @@
   color-scheme: dark;
 }
 * { box-sizing: border-box; }
-html { scroll-behavior: smooth; }
+html { scroll-behavior: auto; }
 body {
   background: var(--bg);
   color: var(--fg);
@@ -47,7 +47,7 @@ p { margin: 0; }
 section { scroll-margin-top: 80px; }
 
 /* header */
-.site-header { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20; background: color-mix(in srgb, var(--bg) 86%, transparent); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-bottom: 1px solid var(--line); margin-inline: calc(var(--gutter) * -1); padding-inline: var(--gutter); }
+.site-header { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20; background: color-mix(in srgb, var(--bg) 94%, transparent); border-bottom: 1px solid var(--line); margin-inline: calc(var(--gutter) * -1); padding-inline: var(--gutter); }
 .nav { display: flex; align-items: center; justify-content: space-between; gap: 16px; height: 64px; }
 .brand { font-family: var(--font-display); font-weight: 700; font-size: 1.125rem; letter-spacing: -0.02em; display: inline-flex; align-items: center; gap: 10px; }
 .brand i { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); display: inline-block; }
@@ -245,7 +245,6 @@ footer a:hover { color: var(--fg); }
   opacity: 0;
   transform: translate3d(0, 56px, 0);
   transition: opacity .9s cubic-bezier(.16,.84,.24,1) var(--d, 0s), transform 1s cubic-bezier(.16,.84,.24,1) var(--d, 0s), border-color .3s, background .3s, padding .3s;
-  will-change: opacity, transform;
 }
 .js .frame.rv { transform: translate3d(0, 64px, 0) scale(.97); }
 .js .rv.in { opacity: 1; transform: none; }
@@ -348,11 +347,29 @@ html.lenis, html.lenis body { height: auto; }
 
 /* ===== Alternating section theme: black / white / black / white ... ===== */
 main > section {
-  background: var(--bg);
+  position: relative;
   color: var(--fg);
-  box-shadow: 0 0 0 100vmax var(--bg);
-  clip-path: inset(0 -100vmax);
+  background: transparent;
 }
+/* full-bleed background lives on a pseudo-element so top corners can be rounded and shadowed */
+main > section::before {
+  content: ""; position: absolute; z-index: -1; top: 0; bottom: 0; left: 50%;
+  width: 100vw; transform: translate3d(-50%, 0, 0); backface-visibility: hidden;
+  background: var(--bg);
+}
+/* dimming layer for the section being covered */
+main > section::after {
+  content: ""; position: absolute; z-index: 5; top: 0; bottom: 0; left: 50%;
+  width: 100vw; transform: translate3d(-50%, 0, 0); backface-visibility: hidden;
+  background: #000; opacity: calc(var(--p, 0) * 0.55); pointer-events: none; will-change: opacity;
+}
+/* rounded top corners + soft leading-edge shadow (every section after the hero) */
+main > section:not(:first-of-type)::before,
+main > section:not(:first-of-type)::after {
+  border-radius: clamp(24px, 4vw, 48px) clamp(24px, 4vw, 48px) 0 0;
+}
+main > section:not(:first-of-type)::before { box-shadow: 0 -14px 32px rgba(0, 0, 0, .26); }
+html, body { overflow-x: clip; }
 main > section, main > section.block { border-top: 0; }
 main > section:nth-of-type(even) {
   --bg: #ffffff;
@@ -387,8 +404,31 @@ footer { background: #000; color: #f4f4f2; box-shadow: 0 0 0 100vmax #000; clip-
 }
 .cs .frame { display: block; aspect-ratio: auto; height: auto; }
 
+
+/* ===== Behance-style slide case studies (projects 1 & 3) ===== */
+.cs.cs-slides { padding-inline: 0; }
+.cs-slides .cs-bar { margin-inline: 0; padding-inline: var(--gutter); }
+.cs-slides .cs-inner { width: 100%; }
+.cs-slides .slides { width: 100%; max-width: 1400px; margin-inline: auto; }
+.cs-slides .slide {
+  position: sticky; top: 64px; margin: 0; width: 100%;
+  background: #000; color: #fff; overflow: hidden;
+  will-change: transform;
+}
+.cs-slides .slide:nth-child(even) { background: #fff; color: #0a0a0a; }
+.cs-slides .slide img { display: block; width: 100%; max-width: 100%; height: auto; }
+.cs-slides .slide.empty img { display: none; }
+.cs-slides .slide.empty::before {
+  content: "Place slide image here  ·  1400px wide, height auto";
+  display: grid; place-items: center; text-align: center; padding: 24px;
+  aspect-ratio: 14 / 9; width: 100%;
+  font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase;
+  border: 1px dashed currentColor; opacity: .6;
+}
+.cs-slides .slides-end { display: flex; justify-content: center; padding: clamp(32px, 6vw, 72px) var(--gutter); background: var(--bg); position: relative; z-index: 1; }
+
 /* ===== Parallax stacking: each menu section slides up over the previous one ===== */
-main > section { position: sticky; top: 0; }
+main > section { position: sticky; top: 0; transform-origin: center top; will-change: transform; transform: translate3d(0,0,0); backface-visibility: hidden; }
 </style>
 
 <div id="top"></div>
@@ -417,10 +457,9 @@ main > section { position: sticky; top: 0; }
 <main class="wrap">
 
   <section class="hero" aria-labelledby="hero-title">
-    <p class="mono status"><i></i>Available for new projects · 2026</p>
-    <h1 id="hero-title">Designing the unspoken space between <br><em>human intent and code.</em></h1>
+    <h1 id="hero-title">Less Friction.<br><em>More Feeling.</em></h1>
     <div class="hero-foot">
-      <p>I’m a UI/UX Designer focused on creating simple, intuitive, and meaningful digital experiences. I enjoy solving real user problems through thoughtful design, clear interfaces, and purposeful interactions. Based in Kerala, India, I work across web and mobile products with a focus on making every experience feel effortless.</p>
+      <p>I’m a UI/UX Designer focused on creating simple, intuitive, and meaningful digital experiences.</p>
       <div class="hero-cta">
         <a class="btn" href="#work">View selected work <span aria-hidden="true">↓</span></a>
         <a class="btn ghost" href="#contact">Say hello</a>
@@ -536,9 +575,9 @@ main > section { position: sticky; top: 0; }
       <figure class="poster p4"><div class="frame"><img src="Images/Poster4.jpg" alt="Poster design 4" loading="lazy" onerror="this.remove()"></div></figure>
     </div>
     <!-- Remaining posters live here. Copy a <figure> line to add more. The More / Show less button sits below them. -->
-    <div class="poster-bento" id="more-posters" hidden>
-      <figure class="poster p1"><div class="frame"><img src="Images/poster5.png" alt="Poster design 5" loading="lazy" onerror="this.remove()"></div></figure>
-      <figure class="poster p2"><div class="frame"><img src="Images/poster6.png" alt="Poster design 6" loading="lazy" onerror="this.remove()"></div></figure>
+    <div class="poster-more" id="more-posters" hidden>
+      <figure class="poster"><div class="frame"><img src="Images/poster5.png" alt="Poster design 5" loading="lazy" onerror="this.remove()"></div></figure>
+      <figure class="poster"><div class="frame"><img src="Images/poster6.png" alt="Poster design 6" loading="lazy" onerror="this.remove()"></div></figure>
       <!-- <figure class="poster"><div class="frame"><span>Poster 07</span><img src="Images/poster7.png" alt="Poster design 7" loading="lazy" onerror="this.remove()"></div></figure>
       <figure class="poster"><div class="frame"><span>Poster 08</span><img src="Images/poster8.png" alt="Poster design 8" loading="lazy" onerror="this.remove()"></div></figure> -->
     </div>
@@ -627,7 +666,7 @@ main > section { position: sticky; top: 0; }
         <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 21s-7.5-4.6-9.6-9.2C.9 8.5 2.6 5 6 5c2 0 3.4 1 4 2.2h4C14.6 6 16 5 18 5c3.4 0 5.1 3.500 3.600 6.800C19.500 16.400 12 21 12 21z"/></svg>
         <span id="like-label">Like my portfolio</span>
       </button>
-      <span class="like-count" id="like-count" aria-live="polite">— likes</span>
+      <span class="like-count" id="like-count" aria-live="polite">28k likes</span>
     </div>
   </section>
 
@@ -652,92 +691,28 @@ main > section { position: sticky; top: 0; }
 </footer>
 
 <!-- Four independent case studies: each project has its own editable content block. -->
-<!-- Independent case study: Project one. Edit only this block for this project. -->
-<div class="cs" id="cs-project-one" data-project="Project one" role="dialog" aria-modal="true" aria-labelledby="cs-project-one-title" hidden>
+<!-- Case study slides: Byte & Bean Tech Café. Put your slide images in Images/project1/ (slide-01.jpg, slide-02.jpg ...) or change the src paths. Add/remove <figure class="slide"> blocks freely. -->
+<div class="cs cs-slides" id="cs-project-one" data-project="Project one" role="dialog" aria-modal="true" aria-label="Byte & Bean Tech Café case study" hidden>
   <div class="cs-bar">
-    <span class="mono">Case study</span>
+    <span class="mono">Byte & Bean Tech Café</span>
     <button type="button" class="btn ghost cs-close" id="cs-project-one-close">Close <span aria-hidden="true">✕</span></button>
   </div>
-  <div class="wrap cs-body">
-    <div class="cs-head">
-      <p class="mono">[Mobile App] · 2026</p>
-      <h2 class="title" id="cs-project-one-title">Byte & Bean Tech Café</h2>
-      <dl class="cs-meta">
-        <div><dt>Role</dt><dd>UI/UX Designer</dd></div>
-        <div><dt>Timeline</dt><dd>3 weeks</dd></div>
-        <div><dt>Team</dt><dd>Individual</dd></div>
-        <div><dt>Tools</dt><dd>Figma, Reve, NotebookLm, Photoshop</dd></div>
-      </dl>
+  <div class="cs-inner">
+    <div class="slides">
+      <figure class="slide"><img src="./Images/Projects/pro1-0.png" alt="Byte & Bean Tech Café case study slide 1" loading="lazy" decoding="async"></figure>
+      <figure class="slide"><img src="./Images/Projects/pro1-1.png" alt="Byte & Bean Tech Café case study slide 2" loading="lazy" decoding="async"></figure>
+      <figure class="slide"><img src="./Images/Projects/pro1-2.png" alt="Byte & Bean Tech Café case study slide 3" loading="lazy" decoding="async"></figure>
+      <figure class="slide"><img src="./Images/Projects/pro1-3.png" alt="Byte & Bean Tech Café case study slide 4" loading="lazy" decoding="async"></figure>
+      <figure class="slide"><img src="./Images/Projects/pro1-4.png" alt="Byte & Bean Tech Café case study slide 5" loading="lazy" decoding="async"></figure>
+      <figure class="slide"><img src="./Images/Projects/pro1-5.png" alt="Byte & Bean Tech Café case study slide 6" loading="lazy" decoding="async"></figure>
+      <figure class="slide"><img src="./Images/Projects/pro1-6.png" alt="Byte & Bean Tech Café case study slide 6" loading="lazy" decoding="async"></figure>
+      <figure class="slide"><img src="./Images/Projects/pro1-7.png" alt="Byte & Bean Tech Café case study slide 6" loading="lazy" decoding="async"></figure>
+      <figure class="slide"><img src="./Images/Projects/pro1-8.png" alt="Byte & Bean Tech Café case study slide 6" loading="lazy" decoding="async"></figure>
     </div>
-    <div class="frame r-21-9"><img src="Images/Frame 92.1.png"></div>
-    <div class="cs-sec">
-      <h3>Overview</h3>
-      <div class="txt">
-        <p class="big">Byte & Bean brings café ordering, table reservations, and practical tech assistance together for people who work in tech.</p>
-        <p>A tech café concept designed to help professionals enjoy good coffee, find a comfortable seat, and get basic technical help in one place.</p>
-      </div>
-    </div>
-    <div class="cs-sec">
-      <h3>The problem</h3>
-      <div class="txt">
-        <p>Tech professionals may need a place to work, food and drinks, or quick technical help, but these needs are often handled separately.</p>
-      </div>
-    </div>
-    <div class="cs-sec">
-      <h3>Research</h3>
-      <div class="txt">
-        <p>Explore how people use cafés while working, what makes reserving a seat easier, and which tech-support tasks they need most.</p>
-        <div class="frame r-16-10"><img src="Images/pro1research.png"></div>
-      </div>
-    </div>
-    <div class="cs-sec">
-      <h3>Wireframes</h3>
-      <div class="txt">
-        <!-- <p>Explore how people use cafés while working, what makes reserving a seat easier, and which tech-support tasks they need most.</p> -->
-        <div class="frame r-16-10"><img src="Images/Wireframes.jpg"></div>
-      </div>
-    </div>
-    <div class="cs-sec">
-      <h3>User Flow</h3>
-      <div class="txt">
-        <!-- <p>Explore how people use cafés while working, what makes reserving a seat easier, and which tech-support tasks they need most.</p> -->
-        <div class="rauto"><img src="Images/B&Buserflow.png"></div>
-      </div>
-    </div>
-    <div class="cs-sec">
-      <h3>Design system</h3>
-      <div class="txt">
-        <p>A clear home screen brings food ordering, table reservations, and tech assistance forward as the three main actions.</p>
-        <div class="cs-pair">
-          <div class="frame r-4-5"><img src="Images/dsgnsystmpro1.png"></div>
-        </div>
-      </div>
-    </div>
-    <div class="cs-sec">
-      <h3>UI Showcase</h3>
-        <div class="cs-pair">
-          <div class="frame r-4-5"><img src="Images/screen1pro1.png"></div>
-          <div class="frame r-4-5"><img src="Images/screen2pro1.png"></div>
-        </div>
-      </div>
-    </div>
-    <div class="cs-sec">
-      <h3>Outcome</h3>
-      <div class="txt" style="max-width:none">
-        <p>The concept combines the key tech-café services into one straightforward mobile experience.</p>
-        <div class="cs-results">
-          <div><b>03</b><small>Core Services</small></div>
-          <div><b>1.0x</b><small>Unified Experience</small></div>
-          <div><b>12+</b><small>App Screens</small></div>
-        </div>
-      </div>
-    </div>
-    <div class="cs-next">
-      <p class="mono">Next project</p>
+    <div class="slides-end">
       <button type="button" class="btn" id="cs-project-one-back">Back to all work <span aria-hidden="true">↑</span></button>
     </div>
   </div>
-
 </div>
 
 <!-- Independent case study: Project two. Edit only this block for this project. -->
@@ -815,101 +790,28 @@ main > section { position: sticky; top: 0; }
 
 </div>
 
-<!-- Independent case study: Project three. Edit only this block for this project. -->
-<div class="cs" id="cs-project-three" data-project="Project three" role="dialog" aria-modal="true" aria-labelledby="cs-project-three-title" hidden>
+<!-- Case study slides: Lynx clothing. Put your slide images in Images/project3/ (slide-01.jpg, slide-02.jpg ...) or change the src paths. Add/remove <figure class="slide"> blocks freely. -->
+<div class="cs cs-slides" id="cs-project-three" data-project="Project three" role="dialog" aria-modal="true" aria-label="Lynx clothing case study" hidden>
   <div class="cs-bar">
-    <span class="mono">Case study</span>
+    <span class="mono">Lynx clothing</span>
     <button type="button" class="btn ghost cs-close" id="cs-project-three-close">Close <span aria-hidden="true">✕</span></button>
   </div>
-  <div class="wrap cs-body">
-    <div class="cs-head">
-      <p class="mono">[Design System] · 2026</p>
-      <h2 class="title" id="cs-project-three-title">Lynx clothing</h2>
-      <dl class="cs-meta">
-        <div><dt>Role</dt><dd>UI/UX Designer</dd></div>
-        <div><dt>Timeline</dt><dd>2 weeks</dd></div>
-        <div><dt>Team</dt><dd>Individual</dd></div>
-        <div><dt>Tools</dt><dd>Figma, Reve, NotebookLm, Photoshop</dd></div>
-      </dl>
+  <div class="cs-inner">
+    <div class="slides">
+      <figure class="slide"><img src="./Images/Projects/pro3-0.png" alt="Byte & Bean Tech Café case study slide 1" loading="lazy" decoding="async"></figure>
+      <figure class="slide"><img src="./Images/Projects/pro3-1.png" alt="Byte & Bean Tech Café case study slide 2" loading="lazy" decoding="async"></figure>
+      <figure class="slide"><img src="./Images/Projects/pro3-2.png" alt="Byte & Bean Tech Café case study slide 3" loading="lazy" decoding="async"></figure>
+      <figure class="slide"><img src="./Images/Projects/pro3-3.png" alt="Byte & Bean Tech Café case study slide 4" loading="lazy" decoding="async"></figure>
+      <figure class="slide"><img src="./Images/Projects/pro3-4.png" alt="Byte & Bean Tech Café case study slide 5" loading="lazy" decoding="async"></figure>
+      <figure class="slide"><img src="./Images/Projects/pro3-5.png" alt="Byte & Bean Tech Café case study slide 6" loading="lazy" decoding="async"></figure>
+      <figure class="slide"><img src="./Images/Projects/pro3-6.png" alt="Byte & Bean Tech Café case study slide 6" loading="lazy" decoding="async"></figure>
+      <figure class="slide"><img src="./Images/Projects/pro3-7.png" alt="Byte & Bean Tech Café case study slide 6" loading="lazy" decoding="async"></figure>
+      <figure class="slide"><img src="./Images/Projects/pro3-8.png" alt="Byte & Bean Tech Café case study slide 6" loading="lazy" decoding="async"></figure>
     </div>
-    <div class="frame r-21-9"><img src="Images/pro3screens.png"></div>
-    <div class="cs-sec">
-      <h3>Overview</h3>
-      <div class="txt">
-        <p class="big">Lynx Clothing is a mobile e-commerce application designed to make shopping for traditional Indian clothing simple, elegant, and convenient. The app brings traditional fashion collections, product discovery, shopping cart management, secure checkout, and order tracking together in one seamless mobile experience.</p>
-        <p>My role was to design the product page UI/UX, using reusable Figma components, variables, and interactive prototyping to create a clean, consistent, and user-friendly shopping experience.</p>
-      </div>
-    </div>
-    <div class="cs-sec">
-      <h3>The problem</h3>
-      <div class="txt">
-        <p>The product page needed a clearer way for shoppers to explore clothing details, compare color options, select sizes, and proceed to checkout. A review of the existing design helped identify opportunities to simplify the layout, improve product visibility,
-           and make purchasing actions more intuitive.</p>
-      </div>
-    </div>
-    <div class="cs-sec">
-      <h3>Wireframes</h3>
-      <div class="txt">
-        <!-- <p>Explore how people use cafés while working, what makes reserving a seat easier, and which tech-support tasks they need most.</p> -->
-        <div class="frame r-16-10"><img src="Images/pro3wireframe.png"></div>
-      </div>
-    </div>
-    <div class="cs-sec">
-      <h3>Userflow</h3>
-      <div class="txt">
-        <!-- <p>Explore how people use cafés while working, what makes reserving a seat easier, and which tech-support tasks they need most.</p> -->
-        <div class="frame r-16-10"><img src="Images/pro3userflow.png"></div>
-      </div>
-    </div>
-    <div class="cs-sec">
-      <h3>Research</h3>
-      <div class="txt">
-        <p>Research Methods: Competitor analysis and review of traditional e-commerce clothing apps.<br>
-           Participants: Online shoppers interested in traditional cloths were considered as the target audience.<br>
-          Key Insights: Shoppers need clear product images, easy-to-select sizes and colors, visible pricing, and a prominent Add to Cart button to make confident purchasing decisions.</p>
-        <div class="frame r-16-10"><img src="Images/pro3research.png"></div>
-      </div>
-    </div>
-    <div class="cs-sec">
-      <h3>Design solution</h3>
-      <div class="txt">
-        <p>I prioritized clear product imagery, visible pricing, and easy-to-select sizes and colors to help shoppers make confident purchase decisions. Reusable Figma components and variables maintain design consistency,
-           while interactive prototyping demonstrates the flow from product selection to adding an item to the cart.</p>
-        <div class="cs-pair">
-          <div class="frame r-4-5"><img src="Images/degnsystmpro3.png"></div>
-        </div>
-      </div>
-    </div>
-    <div class="cs-sec">
-      <h3>Design solution</h3>
-      <div class="txt">
-        <p>I prioritized clear product imagery, visible pricing, and easy-to-select sizes and colors to help shoppers make confident purchase decisions.maintain design consistency,
-           while interactive prototyping demonstrates the flow from product selection to adding an item to the cart.</p>
-        <div class="cs-pair">
-          <div class="frame r-4-5"><img src="Images/pro3mockup1.png"></div>
-          <div class="frame r-4-5"><img src="Images/pro3mockup2.png"></div>
-        </div>
-      </div>
-    </div>
-    <!-- <div class="cs-sec">
-      <h3>Outcome</h3>
-      <div class="txt" style="max-width:none">
-        <p>The redesigned cart makes product details, size, quantity, discounts, and checkout actions easier to scan within one interface.
-           The design brings together 6 key cart elements using reusable components and Figma variables to improve consistency and simplify the shopping flow.
-           Quantitative usability improvements have not yet been measured.</p>
-        <div class="cs-results">
-          <div><b>08</b><small>Variable Collections</small></div>
-          <div><b>1.5x</b><small>Design Workflow Speed</small></div>
-          <div><b>80%</b><small>Interaction Coverage</small></div>
-        </div>
-      </div>
-    </div> -->
-    <div class="cs-next">
-      <p class="mono">Next project</p>
+    <div class="slides-end">
       <button type="button" class="btn" id="cs-project-three-back">Back to all work <span aria-hidden="true">↑</span></button>
     </div>
   </div>
-
 </div>
 
 <!-- Independent case study: Project four. Edit only this block for this project. -->
@@ -1023,7 +925,44 @@ main > section { position: sticky; top: 0; }
     } catch (err) { fallback(); }
   });
 
-  var activeCase = null, lastFocus = null;
+  var activeCase = null, lastFocus = null, caseLenis = null, caseRO = null;
+
+  /* slide case studies: empty-image placeholders + sticky stacking + own smooth scroller */
+  function markEmpty(img) { img.parentNode.classList.add('empty'); }
+  document.querySelectorAll('.cs-slides .slide img').forEach(function (img) {
+    img.addEventListener('error', function () { markEmpty(img); });
+    img.addEventListener('load', function () { img.parentNode.classList.remove('empty'); });
+    if (img.complete && img.naturalWidth === 0 && img.getAttribute('src')) markEmpty(img);
+  });
+  function layoutSlides(cs) {
+    var vh = cs.clientHeight, bar = cs.querySelector('.cs-bar').offsetHeight;
+    cs.querySelectorAll('.slide').forEach(function (sl) {
+      sl.style.top = Math.min(bar, vh - sl.offsetHeight) + 'px';
+    });
+  }
+  function startSlides(cs) {
+    layoutSlides(cs);
+    if ('ResizeObserver' in window) {
+      caseRO = new ResizeObserver(function () { layoutSlides(cs); });
+      caseRO.observe(cs);
+      cs.querySelectorAll('.slide').forEach(function (sl) { caseRO.observe(sl); });
+    }
+    if (!reduce && window.Lenis) {
+      if (lenis) lenis.stop();
+      caseLenis = new Lenis({
+        wrapper: cs, content: cs.querySelector('.cs-inner'),
+        duration: 1.2,
+        easing: function (t) { return Math.min(1, 1.001 - Math.pow(2, -10 * t)); },
+        smoothWheel: true
+      });
+      (function raf(t) { if (!caseLenis) return; caseLenis.raf(t); requestAnimationFrame(raf); })(performance.now());
+    }
+  }
+  function stopSlides() {
+    if (caseRO) { caseRO.disconnect(); caseRO = null; }
+    if (caseLenis) { caseLenis.destroy(); caseLenis = null; if (lenis) lenis.start(); }
+  }
+
   function openCase(name, trigger) {
     lastFocus = trigger;
     activeCase = document.querySelector('.cs[data-project="' + name + '"]');
@@ -1031,10 +970,12 @@ main > section { position: sticky; top: 0; }
     activeCase.hidden = false;
     activeCase.scrollTop = 0;
     document.documentElement.style.overflow = 'hidden';
+    if (activeCase.classList.contains('cs-slides')) startSlides(activeCase);
     activeCase.querySelector('.cs-close').focus();
   }
   function closeCase() {
     if (!activeCase) return;
+    stopSlides();
     activeCase.hidden = true;
     activeCase = null;
     document.documentElement.style.overflow = '';
@@ -1043,7 +984,7 @@ main > section { position: sticky; top: 0; }
   document.querySelectorAll('.card').forEach(function (c) {
     c.addEventListener('click', function () { openCase(c.getAttribute('data-project'), c); });
   });
-  document.querySelectorAll('.cs-close, .cs-next button').forEach(function (b) {
+  document.querySelectorAll('.cs-close, .cs-next button, .slides-end button').forEach(function (b) {
     b.addEventListener('click', closeCase);
   });
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && activeCase) closeCase(); });
@@ -1101,11 +1042,25 @@ main > section { position: sticky; top: 0; }
     try { localStorage.setItem('portfolio-liked', '1'); } catch (e) {}
     likeBtn.setAttribute('aria-pressed', 'true'); likeLabel.textContent = 'Thanks for the like!';
   }
-  function renderCount(n) { likeCount.textContent = n + (n === 1 ? ' like' : ' likes'); }
+  var defaultLikes = 28000;
+  function renderCount(n) {
+    var total = defaultLikes + (Number(n) || 0);
+    var label = total >= 1000
+      ? (total / 1000).toFixed(total % 1000 === 0 ? 0 : 1).replace(/\\.0$/, '') + 'k'
+      : String(total);
+    likeCount.textContent = label + ' likes';
+  }
   function loadCount() {
-    fetch(API_BASE_URL + '/api/likes').then(function (r) { return r.json(); })
-      .then(function (d) { renderCount(d.count); })
-      .catch(function () { likeCount.textContent = ''; });
+    // Show the default count immediately, then add any likes saved by the API.
+    renderCount(0);
+    fetch(API_BASE_URL + '/api/likes').then(function (r) {
+      if (!r.ok) throw new Error('Unable to load likes');
+      return r.json();
+    }).then(function (d) {
+      renderCount(d.count);
+    }).catch(function () {
+      renderCount(0);
+    });
   }
   if (liked()) { likeBtn.setAttribute('aria-pressed', 'true'); likeLabel.textContent = 'Thanks for the like!'; }
   loadCount();
@@ -1140,14 +1095,14 @@ main > section { position: sticky; top: 0; }
 
   /* ---- ultra-smooth scrolling ---- */
   var lenis = null;
-  document.querySelectorAll('.cs').forEach(function (el) { el.setAttribute('data-lenis-prevent', ''); });
+  document.querySelectorAll('.cs:not(.cs-slides)').forEach(function (el) { el.setAttribute('data-lenis-prevent', ''); });
   if (!reduce && window.Lenis) {
     lenis = new Lenis({
       duration: 1.2,
       easing: function (t) { return Math.min(1, 1.001 - Math.pow(2, -10 * t)); },
       smoothWheel: true
     });
-    (function raf(t) { lenis.raf(t); requestAnimationFrame(raf); })(performance.now());
+    (function raf(t) { lenis.raf(t); if (stackEls) updateDepth(); requestAnimationFrame(raf); })(performance.now());
   }
 
   /* anchor links: sections are sticky, so scroll to each section's natural (in-flow) position */
@@ -1183,7 +1138,33 @@ main > section { position: sticky; top: 0; }
     var ro = new ResizeObserver(layoutStack);
     stackEls.forEach(function (s) { ro.observe(s); });
   }
-  layoutStack();
+  /* depth: the section being covered scales down + dims as the next one slides over it */
+  var lastP = [];
+  function updateDepth() {
+    var vh = window.innerHeight;
+    for (var i = 0; i < stackEls.length; i++) {
+      var sec = stackEls[i], next = stackEls[i + 1], p = 0;
+      if (next && !reduce) {
+        var nt = next.getBoundingClientRect().top;
+        if (nt < vh) {
+          var stuck = sec.getBoundingClientRect().top <= (parseFloat(sec.style.top) || 0) + 1;
+          if (stuck) p = Math.max(0, Math.min(1, (vh - nt) / vh));
+        }
+      }
+      p = Math.round(p * 1000) / 1000;
+      if (lastP[i] === p) continue;
+      lastP[i] = p;
+      sec.style.setProperty('--p', p);
+      sec.style.transform = 'translate3d(0,0,0) scale(' + (1 - 0.06 * p).toFixed(4) + ')';
+    }
+  }
+  var depthTick = false;
+  window.addEventListener('scroll', function () {
+    if (depthTick) return; depthTick = true;
+    requestAnimationFrame(function () { depthTick = false; updateDepth(); });
+  }, { passive: true });
+  window.addEventListener('resize', updateDepth);
+  layoutStack(); updateDepth();
 
   /* ---- scroll animation (loops in both directions) ---- */
   if (reduce || !('IntersectionObserver' in window)) return;
