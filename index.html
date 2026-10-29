@@ -351,24 +351,12 @@ main > section {
   color: var(--fg);
   background: transparent;
 }
-/* full-bleed background lives on a pseudo-element so top corners can be rounded and shadowed */
+/* full-bleed background lives on a pseudo-element so each section spans the whole screen width */
 main > section::before {
   content: ""; position: absolute; z-index: -1; top: 0; bottom: 0; left: 50%;
   width: 100vw; transform: translate3d(-50%, 0, 0); backface-visibility: hidden;
   background: var(--bg);
 }
-/* dimming layer for the section being covered */
-main > section::after {
-  content: ""; position: absolute; z-index: 5; top: 0; bottom: 0; left: 50%;
-  width: 100vw; transform: translate3d(-50%, 0, 0); backface-visibility: hidden;
-  background: #000; opacity: calc(var(--p, 0) * 0.55); pointer-events: none; will-change: opacity;
-}
-/* rounded top corners + soft leading-edge shadow (every section after the hero) */
-main > section:not(:first-of-type)::before,
-main > section:not(:first-of-type)::after {
-  border-radius: clamp(24px, 4vw, 48px) clamp(24px, 4vw, 48px) 0 0;
-}
-main > section:not(:first-of-type)::before { box-shadow: 0 -14px 32px rgba(0, 0, 0, .26); }
 html, body { overflow-x: clip; }
 main > section, main > section.block { border-top: 0; }
 main > section:nth-of-type(even) {
@@ -411,9 +399,8 @@ footer { background: #000; color: #f4f4f2; box-shadow: 0 0 0 100vmax #000; clip-
 .cs-slides .cs-inner { width: 100%; }
 .cs-slides .slides { width: 100%; max-width: 1400px; margin-inline: auto; }
 .cs-slides .slide {
-  position: sticky; top: 64px; margin: 0; width: 100%;
+  position: relative; margin: 0; width: 100%;
   background: #000; color: #fff; overflow: hidden;
-  will-change: transform;
 }
 .cs-slides .slide:nth-child(even) { background: #fff; color: #0a0a0a; }
 .cs-slides .slide img { display: block; width: 100%; max-width: 100%; height: auto; }
@@ -447,8 +434,6 @@ footer { background: #000; color: #f4f4f2; box-shadow: 0 0 0 100vmax #000; clip-
   .hero-3d { --s: clamp(220px, 58vw, 300px); --cy: calc(var(--s) / 2 + 4px); }
 }
 
-/* ===== Parallax stacking: each menu section slides up over the previous one ===== */
-main > section { position: sticky; top: 0; transform-origin: center top; will-change: transform; transform: translate3d(0,0,0); backface-visibility: hidden; }
 </style>
 
 <div id="top"></div>
@@ -944,41 +929,26 @@ main > section { position: sticky; top: 0; transform-origin: center top; will-ch
     } catch (err) { fallback(); }
   });
 
-  var activeCase = null, lastFocus = null, caseLenis = null, caseRO = null;
+  var activeCase = null, lastFocus = null, caseLenis = null;
 
-  /* slide case studies: empty-image placeholders + sticky stacking + own smooth scroller */
+  /* slide case studies: empty-image placeholders + own smooth scroller */
   function markEmpty(img) { img.parentNode.classList.add('empty'); }
   document.querySelectorAll('.cs-slides .slide img').forEach(function (img) {
     img.addEventListener('error', function () { markEmpty(img); });
     img.addEventListener('load', function () { img.parentNode.classList.remove('empty'); });
     if (img.complete && img.naturalWidth === 0 && img.getAttribute('src')) markEmpty(img);
   });
-  function layoutSlides(cs) {
-    var vh = cs.clientHeight, bar = cs.querySelector('.cs-bar').offsetHeight;
-    cs.querySelectorAll('.slide').forEach(function (sl) {
-      sl.style.top = Math.min(bar, vh - sl.offsetHeight) + 'px';
-    });
-  }
   function startSlides(cs) {
-    layoutSlides(cs);
-    if ('ResizeObserver' in window) {
-      caseRO = new ResizeObserver(function () { layoutSlides(cs); });
-      caseRO.observe(cs);
-      cs.querySelectorAll('.slide').forEach(function (sl) { caseRO.observe(sl); });
-    }
     if (!reduce && window.Lenis) {
       if (lenis) lenis.stop();
       caseLenis = new Lenis({
         wrapper: cs, content: cs.querySelector('.cs-inner'),
-        duration: 1.2,
-        easing: function (t) { return Math.min(1, 1.001 - Math.pow(2, -10 * t)); },
-        smoothWheel: true
+        duration: SCROLL_DURATION, easing: SCROLL_EASE, smoothWheel: true
       });
       (function raf(t) { if (!caseLenis) return; caseLenis.raf(t); requestAnimationFrame(raf); })(performance.now());
     }
   }
   function stopSlides() {
-    if (caseRO) { caseRO.disconnect(); caseRO = null; }
     if (caseLenis) { caseLenis.destroy(); caseLenis = null; if (lenis) lenis.start(); }
   }
 
@@ -1112,19 +1082,28 @@ main > section { position: sticky; top: 0; transform-origin: center top; will-ch
 
   var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  /* ---- ultra-smooth scrolling ---- */
+  /* ---- ultra-smooth, slower scrolling ---- */
+  var SCROLL_DURATION = 1.9;
+  var SCROLL_EASE = function (t) { return 1 - Math.pow(1 - t, 4); };
   var lenis = null;
   document.querySelectorAll('.cs:not(.cs-slides)').forEach(function (el) { el.setAttribute('data-lenis-prevent', ''); });
   if (!reduce && window.Lenis) {
-    lenis = new Lenis({
-      duration: 1.2,
-      easing: function (t) { return Math.min(1, 1.001 - Math.pow(2, -10 * t)); },
-      smoothWheel: true
-    });
-    (function raf(t) { lenis.raf(t); if (stackEls) updateDepth(); requestAnimationFrame(raf); })(performance.now());
+    lenis = new Lenis({ duration: SCROLL_DURATION, easing: SCROLL_EASE, smoothWheel: true });
+    (function raf(t) { lenis.raf(t); requestAnimationFrame(raf); })(performance.now());
+
+    /* two mouse-wheel notches travel one screen (one section); trackpads keep a gentle 1:1 feel */
+    window.addEventListener('wheel', function (e) {
+      var inst = caseLenis || lenis;
+      if (!inst || !e.deltaY) return;
+      var vh = (caseLenis && activeCase) ? activeCase.clientHeight : window.innerHeight;
+      var dy = Math.abs(e.deltaY);
+      var notch = e.deltaMode === 1 || (dy >= 40 && Math.floor(dy) === dy);
+      var px = e.deltaMode === 1 ? dy * (100 / 6) : dy;
+      inst.options.wheelMultiplier = notch ? (vh * 0.5) / px : 1.2;
+    }, { capture: true, passive: true });
   }
 
-  /* anchor links: sections are sticky, so scroll to each section's natural (in-flow) position */
+  /* anchor links: glide to each section */
   var mainEl = document.querySelector('main');
   function naturalTop(el) {
     var y = mainEl.getBoundingClientRect().top + (window.scrollY || document.documentElement.scrollTop);
@@ -1144,46 +1123,6 @@ main > section { position: sticky; top: 0; transform-origin: center top; will-ch
       if (lenis) lenis.scrollTo(y); else window.scrollTo({ top: y, behavior: reduce ? 'auto' : 'smooth' });
     });
   });
-
-  /* ---- section stacking: tall sections pin with their bottom edge in view, then the next one covers them ---- */
-  var stackEls = [].slice.call(document.querySelectorAll('main > section'));
-  function layoutStack() {
-    var vh = window.innerHeight;
-    stackEls.forEach(function (s) { s.style.top = Math.min(0, vh - s.offsetHeight) + 'px'; });
-  }
-  window.addEventListener('resize', layoutStack);
-  window.addEventListener('load', layoutStack);
-  if ('ResizeObserver' in window) {
-    var ro = new ResizeObserver(layoutStack);
-    stackEls.forEach(function (s) { ro.observe(s); });
-  }
-  /* depth: the section being covered scales down + dims as the next one slides over it */
-  var lastP = [];
-  function updateDepth() {
-    var vh = window.innerHeight;
-    for (var i = 0; i < stackEls.length; i++) {
-      var sec = stackEls[i], next = stackEls[i + 1], p = 0;
-      if (next && !reduce) {
-        var nt = next.getBoundingClientRect().top;
-        if (nt < vh) {
-          var stuck = sec.getBoundingClientRect().top <= (parseFloat(sec.style.top) || 0) + 1;
-          if (stuck) p = Math.max(0, Math.min(1, (vh - nt) / vh));
-        }
-      }
-      p = Math.round(p * 1000) / 1000;
-      if (lastP[i] === p) continue;
-      lastP[i] = p;
-      sec.style.setProperty('--p', p);
-      sec.style.transform = 'translate3d(0,0,0) scale(' + (1 - 0.06 * p).toFixed(4) + ')';
-    }
-  }
-  var depthTick = false;
-  window.addEventListener('scroll', function () {
-    if (depthTick) return; depthTick = true;
-    requestAnimationFrame(function () { depthTick = false; updateDepth(); });
-  }, { passive: true });
-  window.addEventListener('resize', updateDepth);
-  layoutStack(); updateDepth();
 
   /* ---- scroll animation (loops in both directions) ---- */
   if (reduce || !('IntersectionObserver' in window)) return;
