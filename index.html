@@ -941,10 +941,7 @@ footer { background: #000; color: #f4f4f2; box-shadow: 0 0 0 100vmax #000; clip-
   function startSlides(cs) {
     if (!reduce && window.Lenis) {
       if (lenis) lenis.stop();
-      caseLenis = new Lenis({
-        wrapper: cs, content: cs.querySelector('.cs-inner'),
-        duration: SCROLL_DURATION, easing: SCROLL_EASE, smoothWheel: true
-      });
+      caseLenis = new Lenis(scrollOpts({ wrapper: cs, content: cs.querySelector('.cs-inner') }));
       (function raf(t) { if (!caseLenis) return; caseLenis.raf(t); requestAnimationFrame(raf); })(performance.now());
     }
   }
@@ -1085,10 +1082,18 @@ footer { background: #000; color: #f4f4f2; box-shadow: 0 0 0 100vmax #000; clip-
   /* ---- ultra-smooth, slower scrolling ---- */
   var SCROLL_DURATION = 1.9;
   var SCROLL_EASE = function (t) { return 1 - Math.pow(1 - t, 4); };
+  /* touch phones/tablets: smoothed, slightly slower and heavier swipe so it feels calmer than native */
+  var IS_TOUCH = window.matchMedia && window.matchMedia('(pointer: coarse)').matches;
+  function scrollOpts(extra) {
+    var o = { duration: IS_TOUCH ? 2.4 : SCROLL_DURATION, easing: SCROLL_EASE, smoothWheel: true };
+    if (IS_TOUCH) { o.syncTouch = true; o.syncTouchLerp = 0.05; o.touchMultiplier = 0.7; o.touchInertiaMultiplier = 18; }
+    for (var k in extra) o[k] = extra[k];
+    return o;
+  }
   var lenis = null;
   document.querySelectorAll('.cs:not(.cs-slides)').forEach(function (el) { el.setAttribute('data-lenis-prevent', ''); });
   if (!reduce && window.Lenis) {
-    lenis = new Lenis({ duration: SCROLL_DURATION, easing: SCROLL_EASE, smoothWheel: true });
+    lenis = new Lenis(scrollOpts({}));
     (function raf(t) { lenis.raf(t); requestAnimationFrame(raf); })(performance.now());
 
     /* two mouse-wheel notches travel one screen (one section); trackpads keep a gentle 1:1 feel */
