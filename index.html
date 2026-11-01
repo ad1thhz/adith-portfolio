@@ -50,7 +50,6 @@ section { scroll-margin-top: 80px; }
 .site-header { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20; background: color-mix(in srgb, var(--bg) 94%, transparent); border-bottom: 1px solid var(--line); margin-inline: calc(var(--gutter) * -1); padding-inline: var(--gutter); }
 .nav { display: flex; align-items: center; justify-content: space-between; gap: 16px; height: 64px; }
 .brand { font-family: var(--font-display); font-weight: 700; font-size: 1.125rem; letter-spacing: -0.02em; display: inline-flex; align-items: center; gap: 10px; }
-.brand i { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); display: inline-block; }
 .nav-links { display: flex; gap: 28px; align-items: center; }
 .nav-links a { font-size: 0.9375rem; color: var(--muted); transition: color .2s; }
 .nav-links a:hover { color: var(--fg); }
@@ -440,7 +439,7 @@ footer { background: #000; color: #f4f4f2; box-shadow: 0 0 0 100vmax #000; clip-
 
 <header class="site-header">
   <div class="nav wrap">
-    <a class="brand" href="#top"><i></i>Portfolio.</a>
+    <a class="brand" href="#top"><i></i></a>
     <nav class="nav-links" aria-label="Primary">
       <a href="#work">Work</a>
       <a href="#about">About</a>
@@ -541,7 +540,7 @@ footer { background: #000; color: #f4f4f2; box-shadow: 0 0 0 100vmax #000; clip-
           <span class="year">2026</span>
         </div>
       </button>
-      <button type="button" class="card narrow offset" data-project="Project two" aria-label="Open case study: Project two">
+      <button type="button" class="card narrow" data-project="Project two" aria-label="Open case study: Project two">
         <div class="frame r-4-5"><img src="Images/pro2.png"></div>
         <div class="card-meta">
           <div>
@@ -550,7 +549,7 @@ footer { background: #000; color: #f4f4f2; box-shadow: 0 0 0 100vmax #000; clip-
             <div class="tags"><span class="tag">Web platform</span><span class="tag">UX</span></div>
           </div>
           <span class="year">2026</span>
-        </div>  
+        </div>
       </button>
       <button type="button" class="card wide" data-project="Project four" aria-label="Open case study: Project four">
         <div class="frame r-16-10"><img src="Images/Byte & Bean Dashboard Laptop.png"></a></div>
@@ -582,8 +581,7 @@ footer { background: #000; color: #f4f4f2; box-shadow: 0 0 0 100vmax #000; clip-
     <div class="poster-bento" id="more-posters" hidden>
       <figure class="poster p1"><div class="frame"><img src="Images/poster5.png" alt="Poster design 5" loading="lazy" onerror="this.remove()"></div></figure>
       <figure class="poster p2"><div class="frame"><img src="Images/poster6.png" alt="Poster design 6" loading="lazy" onerror="this.remove()"></div></figure>
-      <!-- <figure class="poster"><div class="frame"><span>Poster 07</span><img src="Images/poster7.png" alt="Poster design 7" loading="lazy" onerror="this.remove()"></div></figure>
-      <figure class="poster"><div class="frame"><span>Poster 08</span><img src="Images/poster8.png" alt="Poster design 8" loading="lazy" onerror="this.remove()"></div></figure> -->
+      <figure class="poster p3"><div class="frame"><img src="Images/poster7.jpg" alt="Poster design 6" loading="lazy" onerror="this.remove()"></div></figure>
     </div>
     <div class="more-wrap">
       <button type="button" class="btn ghost more-btn" id="more-posters-btn" aria-expanded="false" aria-controls="more-posters">
@@ -719,79 +717,26 @@ footer { background: #000; color: #f4f4f2; box-shadow: 0 0 0 100vmax #000; clip-
   </div>
 </div>
 
-<!-- Independent case study: Project two. Edit only this block for this project. -->
-<div class="cs" id="cs-project-two" data-project="Project two" role="dialog" aria-modal="true" aria-labelledby="cs-project-two-title" hidden>
+<div class="cs cs-slides" id="cs-project-two" data-project="Project two" role="dialog" aria-modal="true" aria-label="Byte & Bean Tech Café case study" hidden>
   <div class="cs-bar">
-    <span class="mono">Case study</span>
-    <button type="button" class="btn ghost cs-close" id="cs-project-two-close">Close <span aria-hidden="true">✕</span></button>
+    <span class="mono">ONETRIP</span>
+    <button type="button" class="btn ghost cs-close" id="cs-project-one-close">Close <span aria-hidden="true">✕</span></button>
   </div>
-  <div class="wrap cs-body">
-    <div class="cs-head">
-      <p class="mono">[Web Platform] · 2026</p>
-      <h2 class="title" id="cs-project-two-title">Onetrip Parallax-website</h2>
-      <dl class="cs-meta">
-        <div><dt>Role</dt><dd>UI/UX Designer</dd></div>
-        <div><dt>Timeline</dt><dd>2 weeks</dd></div>
-        <div><dt>Team</dt><dd>Individual</dd></div>
-        <div><dt>Tools</dt><dd>Figma, Reve, NotebookLm, Photoshop</dd></div>
-      </dl>
+  <div class="cs-inner">
+    <div class="slides">
+      <figure class="slide"><img src="./Images/Projects/p3-1.png" alt="Byte & Bean Tech Café case study slide 1" loading="lazy" decoding="async"></figure>
+      <figure class="slide"><img src="./Images/Projects/p3-2.png" alt="Byte & Bean Tech Café case study slide 2" loading="lazy" decoding="async"></figure>
+      <figure class="slide"><img src="./Images/Projects/p3-3.png" alt="Byte & Bean Tech Café case study slide 3" loading="lazy" decoding="async"></figure>
+      <figure class="slide"><img src="./Images/Projects/p3-4.png" alt="Byte & Bean Tech Café case study slide 4" loading="lazy" decoding="async"></figure>
+      <figure class="slide"><img src="./Images/Projects/p3-5.png" alt="Byte & Bean Tech Café case study slide 5" loading="lazy" decoding="async"></figure>
+      <figure class="slide"><img src="./Images/Projects/p3-6.png" alt="Byte & Bean Tech Café case study slide 6" loading="lazy" decoding="async"></figure>
+      <figure class="slide"><img src="./Images/Projects/p3-7.png" alt="Byte & Bean Tech Café case study slide 6" loading="lazy" decoding="async"></figure>
+      <figure class="slide"><img src="./Images/Projects/p3-8.png" alt="Byte & Bean Tech Café case study slide 6" loading="lazy" decoding="async"></figure>
     </div>
-    <div class="frame r-21-9"><img src="Images/Pro2screens.png"></div>
-    <div class="cs-sec">
-      <h3>Overview</h3>
-      <div class="txt">
-        <p class="big">ONETRIP is a parallax travel website designed to help users explore Himalayan travel blogs, discover trekking destinations, and follow a guided 5-day trekking plan.
-           The immersive scrolling effects and clear navigation create a more engaging browsing experience while making travel information easier to explore.</p>
-        <p>My role was to design the UI/UX, creating an immersive parallax scrolling experience with engaging visuals, clear navigation, and accessible travel guidance to make trip planning more enjoyable.</p>
-      </div>
-    </div>
-    <div class="cs-sec">
-      <h3>The problem</h3>
-      <div class="txt">
-        <p>Travel websites can overwhelm users with scattered information, complex navigation, and unclear trip-planning details. Based on a review of similar websites,
-           ONETRIP was designed to offer a more engaging experience by combining Himalayan travel blogs, trekking information, and a 5-day itinerary in one accessible platform.</p>
-      </div>
-    </div>
-    <div class="cs-sec">
-      <h3>Research</h3>
-      <div class="txt">
-        <p>Methods: Competitor analysis and travel website review.<br>  
-        Participants: Target users such as adventure seekers and trekking enthusiasts were considered.<br>
-        Key Insights: Users need clear trekking information, easy access to travel blogs, and a structured itinerary. These insights guided ONETRIP’s design to make Himalayan trip planning simpler and more engaging.</p>
-        <div class="frame r-16-10"><img src="Images/pro2research.png"></div>
-      </div>
-    </div>
-    <div class="cs-sec">
-      <h3>Design solution</h3>
-      <div class="txt">
-        <p>Immersive Parallax Scrolling: Created a visually engaging Himalayan experience to inspire travelers.<br>
-          Clear Navigation: Kept menus simple so users can easily explore blogs, trekking details, and travel guides.<br>
-          Guided 5-Day Itinerary: Organized trekking information into a structured plan to simplify trip planning.<br>
-          Strong Call to Action: Added a prominent “Explore More” button to encourage users to discover destinations and guides.</p>
-        <div class="cs-pair">
-          <div class="frame r-4-5"><img src="Images/pro2mockup1.png"></div>
-          <div class="frame r-4-5"><img src="Images/pro2mockup2.png"></div>
-        </div>
-      </div>
-    </div>
-    <!-- <div class="cs-sec">
-      <h3>Outcome</h3>
-      <div class="txt" style="max-width:none">
-        <p>The redesigned interface prioritizes essential travel information, reduces visual clutter, and creates a more focused browsing experience. While usability improvements are expected from these design changes,
-           quantitative results require user testing to validate them.</p>
-        <div class="cs-results">
-          <div><b>90%</b><small>Task Success Rate</small></div>
-          <div><b>35 sec</b><small>Navigation Time</small></div>
-          <div><b>4.2/5</b><small>User Satisfaction</small></div>
-        </div>
-      </div>
-    </div> -->
-    <div class="cs-next">
-      <p class="mono">Next project</p>
-      <button type="button" class="btn" id="cs-project-two-back">Back to all work <span aria-hidden="true">↑</span></button>
+    <div class="slides-end">
+      <button type="button" class="btn" id="cs-project-one-back">Back to all work <span aria-hidden="true">↑</span></button>
     </div>
   </div>
-
 </div>
 
 <!-- Case study slides: Lynx clothing. Put your slide images in Images/project3/ (slide-01.jpg, slide-02.jpg ...) or change the src paths. Add/remove <figure class="slide"> blocks freely. -->
