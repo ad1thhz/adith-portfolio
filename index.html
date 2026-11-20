@@ -414,23 +414,41 @@ footer { background: #000; color: #f4f4f2; box-shadow: 0 0 0 100vmax #000; clip-
 .cs-slides .slides-end { display: flex; justify-content: center; padding: clamp(32px, 6vw, 72px) var(--gutter); background: var(--bg); position: relative; z-index: 1; }
 
 
-/* ===== Hero 3D star (right-hand negative space, never over the text) ===== */
-.hero { position: relative; }
-.hero > h1, .hero > .hero-foot { position: relative; z-index: 1; }
-.hero-3d {
-  --s: clamp(270px, 36vw, 540px);
-  --cy: min(15vw, 215px);
-  position: absolute; z-index: 0; pointer-events: none;
-  width: var(--s); height: var(--s);
-  top: calc(var(--cy) - var(--s) / 2);
-  /* anchored to the viewport's right edge; the star's right arms bleed off-screen like the reference video */
-  right: calc(50% - 50vw - var(--s) * 0.3);
-  opacity: 0; transition: opacity 1.2s ease .3s;
-}
-.hero-3d.ready { opacity: 1; }
-@media (max-width: 760px) {
-  .hero { padding-top: clamp(214px, 60vw, 270px); }
-  .hero-3d { --s: clamp(220px, 58vw, 300px); --cy: calc(var(--s) / 2 + 4px); }
+/* ===== Hero: black / yellow split. Sized in vw / em so name, headline and illustration scale together.
+   The illustration is a flex sibling of the headline, so it can never sit on top of the text. ===== */
+.hero { position: relative; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0; padding-block: 0; min-height: clamp(520px, 52.5vw, 900px); }
+.hero::after { content: ""; position: absolute; z-index: -1; top: 0; bottom: 0; left: 50%; width: 50vw; background: #fff700; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+
+.hero-left { display: flex; flex-direction: column; align-items: flex-start; min-width: 0; padding: clamp(24px, 3.4vw, 48px) clamp(16px, 3vw, 48px) clamp(24px, 3.4vw, 48px) 0; }
+.hero-name { margin: auto 0; display: flex; align-items: flex-start; font-family: var(--font-display); font-weight: 700; font-size: clamp(4.5rem, 13.2vw, 15rem); line-height: .8; letter-spacing: -0.05em; color: var(--fg); white-space: nowrap; }
+.hero-name .dot-i { position: relative; display: inline-block; line-height: 1; margin-top: -0.1em; }
+.hero-name .th { margin-top: -0.1em; line-height: 1; }
+.hero-name .dot-i svg { position: absolute; left: 50%; top: 0.02em; width: 0.27em; height: 0.27em; margin-left: -0.135em; transform-origin: 50% 50%; will-change: transform; animation: dotSpin 10s linear infinite; }
+@keyframes dotSpin { to { transform: rotate(360deg); } }
+.hero-info { display: grid; gap: 22px; width: 100%; max-width: 560px; }
+.hero-info p { font-family: var(--font-display); font-weight: 500; font-size: clamp(1.35rem, 2.3vw, 2.4rem); line-height: 1.15; letter-spacing: -0.02em; text-wrap: balance; }
+.hero-info p.mono { font-family: var(--font-mono); font-weight: 400; font-size: 0.75rem; line-height: 1.6; letter-spacing: 0.08em; }
+.hero-info .btns { display: flex; gap: 12px; flex-wrap: wrap; }
+
+.hero-right { position: relative; min-width: 0; color: #000; display: flex; align-items: center; gap: clamp(8px, 1.6vw, 24px); padding: clamp(20px, 4.4vw, 64px) 0 clamp(24px, 3vw, 48px) clamp(24px, 4.2vw, 60px); }
+.hero h1 { flex: none; font-family: var(--font-display); font-weight: 700; font-size: clamp(2.6rem, 8.6vw, 8rem); line-height: .92; letter-spacing: -0.045em; max-width: none; }
+.hero h1 .ln { display: block; white-space: nowrap; }
+.hero-art { flex: 1 1 0; min-width: 0; margin-right: calc(var(--gutter) * -1); display: grid; place-items: center; pointer-events: none; }
+.hero-art svg { display: block; width: 100%; height: auto; max-width: 340px; }
+.hero-art .spin { transform-box: fill-box; transform-origin: center; animation: artSpin 36s linear infinite; }
+@keyframes artSpin { to { transform: rotate(360deg); } }
+
+@media (max-width: 820px) {
+  .hero { grid-template-columns: minmax(0, 1fr); min-height: 0; }
+  .hero::after { display: none; }
+  .hero-left { padding: 36px 0 40px; gap: 28px; }
+  .hero-name { font-size: 30vw; margin: 0; }
+  .hero-info p { font-size: 1.5rem; }
+  .hero-right { flex-direction: column; align-items: flex-start; gap: 24px; padding: 40px 0 40px; }
+  .hero-right::before { content: ""; position: absolute; z-index: -1; top: 0; bottom: 0; left: 50%; width: 100vw; transform: translate3d(-50%, 0, 0); background: #fff700; }
+  .hero h1 { font-size: 22vw; }
+  .hero-art { align-self: flex-end; margin-right: 0; width: min(56vw, 280px); flex: none; }
 }
 
 </style>
@@ -461,14 +479,20 @@ footer { background: #000; color: #f4f4f2; box-shadow: 0 0 0 100vmax #000; clip-
 <main class="wrap">
 
   <section class="hero" aria-labelledby="hero-title">
-    <canvas class="hero-3d" aria-hidden="true"></canvas>
-    <h1 id="hero-title">Less Friction.<br><em>More Feeling.</em></h1>
-    <div class="hero-foot">
-      <p>I’m a UI/UX Designer focused on creating simple, intuitive, and meaningful digital experiences.</p>
-      <div class="hero-cta">
-        <a class="btn" href="#work">View selected work <span aria-hidden="true">↓</span></a>
-        <a class="btn ghost" href="#contact">Say hello</a>
+    <div class="hero-left">
+      <p class="hero-name"><span class="sr">Adith</span><span aria-hidden="true">ad</span><span class="dot-i" aria-hidden="true">ı<svg viewBox="0 0 200 200" aria-hidden="true"><path d="M100 0 Q90 82.7 13.4 50 Q80 100 13.4 150 Q90 117.3 100 200 Q110 117.3 186.6 150 Q120 100 186.6 50 Q110 82.7 100 0Z" fill="#7b63ff"/><path d="M100 0 Q90 82.7 13.4 50 Q80 100 13.4 150 Q90 117.3 100 200 Q110 117.3 186.6 150 Q120 100 186.6 50 Q110 82.7 100 0Z" fill="#c9c0ff" opacity="0.75" transform="translate(100 100) scale(0.5) translate(-100 -100)"/></svg></span><span class="th" aria-hidden="true">th</span></p>
+      <div class="hero-info">
+        <p class="mono">UI/UX Designer · Thrissur, Kerala</p>
+        <p>I design simple, intuitive and meaningful digital experiences.</p>
+        <div class="btns">
+          <a class="btn" href="#work">View selected work <span aria-hidden="true">↓</span></a>
+          <a class="btn ghost" href="#contact">Say hello</a>
+        </div>
       </div>
+    </div>
+    <div class="hero-right">
+      <h1 id="hero-title"><span class="ln">Less</span><span class="ln">friction.</span><span class="ln">More</span><span class="ln">feeling.</span></h1>
+      <div class="hero-art" aria-hidden="true"><svg viewBox="0 0 240 240"><g transform="translate(120 120)"><g class="spin"><path d="M100 0 Q90 82.7 13.4 50 Q80 100 13.4 150 Q90 117.3 100 200 Q110 117.3 186.6 150 Q120 100 186.6 50 Q110 82.7 100 0Z" fill="#14083f" transform="translate(-100 -100)"/><path d="M100 0 Q90 82.7 13.4 50 Q80 100 13.4 150 Q90 117.3 100 200 Q110 117.3 186.6 150 Q120 100 186.6 50 Q110 82.7 100 0Z" fill="#6b4fff" transform="scale(0.86) translate(-100 -100)"/><path d="M100 0 Q90 82.7 13.4 50 Q80 100 13.4 150 Q90 117.3 100 200 Q110 117.3 186.6 150 Q120 100 186.6 50 Q110 82.7 100 0Z" fill="#c9c0ff" opacity="0.8" transform="scale(0.46) translate(-100 -100)"/></g></g><path d="M0 -14 Q2 -2 14 0 Q2 2 0 14 Q-2 2 -14 0 Q-2 -2 0 -14Z" fill="#000" transform="translate(214 36)"/><path d="M0 -14 Q2 -2 14 0 Q2 2 0 14 Q-2 2 -14 0 Q-2 -2 0 -14Z" fill="#000" transform="translate(28 206) scale(0.7)"/></svg></div>
     </div>
   </section>
 
@@ -611,8 +635,8 @@ footer { background: #000; color: #f4f4f2; box-shadow: 0 0 0 100vmax #000; clip-
     </div>
     <div class="steps">
       <div class="step"><span class="mono">01 · Discover</span><h3>Understand</h3><p>I learn about users through research, interviews, and observation to understand their needs, goals, and constraints.</p></div>
-      <div class="step"><span class="mono">02 · Define</span><h3>Frame</h3><p>I analyze research findings to define the core problem, prioritize user needs, and create a clear design plan.</p></div>
-      <div class="step"><span class="mono">03 · Design</span><h3>Explore</h3><p>I sketch ideas, create wireframes, interactive prototypes, and test them with users to gather feedback and improve the design.</p></div>
+      <div class="step"><span class="mono">02 · Define</span><h3>Explore</h3><p>I analyze research findings to define the core problem, prioritize user needs, and create a clear design plan.</p></div>
+      <div class="step"><span class="mono">03 · Design</span><h3>Frame</h3><p>I sketch ideas, create wireframes, interactive prototypes, and test them with users to gather feedback and improve the design.</p></div>
       <div class="step"><span class="mono">04 · Deliver</span><h3>Deploy</h3><p>I provide developers with clear design specs and assets, then measure success through user feedback and performance metrics.</p></div>
     </div>
   </section>
@@ -1097,7 +1121,7 @@ footer { background: #000; color: #f4f4f2; box-shadow: 0 0 0 100vmax #000; clip-
   });
 
   var targets = [].slice.call(document.querySelectorAll(
-    '.split, .hero .status, .hero-foot > *, .sec-head .mono, .card, .about .frame, .about-copy > *, ' +
+    '.split, .hero .status, .hero-info, .hero-name, .sec-head .mono, .card, .about .frame, .about-copy > *, ' +
     '.row, .step, blockquote, .who, .contact > .mono, .mail-row, .socials, .cert-viewer, .cert-thumb, .like-wrap, ' +
     '.sub-head, .poster, .more-wrap'
   ));
@@ -1143,150 +1167,5 @@ footer { background: #000; color: #f4f4f2; box-shadow: 0 0 0 100vmax #000; clip-
 })();
 </script>
 
-<script type="module">
-/* Hero 3D star: glossy extruded 6-point sparkle, seamless time-based loop. */
-try {
-  const SRC = [
-    'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js',
-    'https://unpkg.com/three@0.160.0/build/three.module.js'
-  ];
-  let THREE = null;
-  for (const u of SRC) { try { THREE = await import(u); break; } catch (e) {} }
-  if (!THREE) throw 0;
-  const canvas = document.querySelector('.hero-3d');
-  const hero = document.querySelector('.hero');
-  if (!canvas) throw 0;
-  const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  /* the hero is pure #000, so an opaque black canvas is invisible and lets real glass transmission work */
-  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: 'high-performance' });
-  renderer.setClearColor(0x000000, 1);
-  renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.1;
-  renderer.outputColorSpace = THREE.SRGBColorSpace;
-
-  const scene = new THREE.Scene();
-  const pmrem = new THREE.PMREMGenerator(renderer);
-
-  /* studio lighting baked into an environment map: violet + white soft-boxes, one small #FFF700 reflection */
-  const studio = new THREE.Scene();
-  studio.add(new THREE.Mesh(new THREE.BoxGeometry(24, 24, 24), new THREE.MeshBasicMaterial({ color: 0x0b0820, side: THREE.BackSide })));
-  const box = (w, h, x, y, z, color, power) => {
-    const m = new THREE.Mesh(new THREE.PlaneGeometry(w, h), new THREE.MeshBasicMaterial({ color: new THREE.Color(color).multiplyScalar(power), side: THREE.DoubleSide }));
-    m.position.set(x, y, z); m.lookAt(0, 0, 0); studio.add(m);
-  };
-  box(12, 3, 0, 10, 3, 0xffffff, 7);        /* top strip */
-  box(3, 12, -10, 0, 4, 0xdcd4ff, 6);       /* left tall, cool white */
-  box(3, 10, 10, 2, 3, 0x7a5cff, 5);        /* right violet */
-  box(10, 2.5, 0, -9, 5, 0x6a45ff, 4);      /* floor violet bounce */
-  box(5, 5, 0, 0, -10, 0xffffff, 3);        /* back */
-  box(1.6, 3.2, 7, -5, 6, 0xFFF700, 9);     /* small yellow reflection */
-  scene.environment = pmrem.fromScene(studio, 0.02).texture;
-
-  const camera = new THREE.PerspectiveCamera(30, 1, 0.1, 50);
-  camera.position.set(0, 0, 5.2);
-
-  /* curved 6-point sparkle outline */
-  const N = 6, R = 1, C = 0.2;
-  const ang = (i) => Math.PI / 2 + (i * 2 * Math.PI) / N;
-  const shape = new THREE.Shape();
-  shape.moveTo(Math.cos(ang(0)) * R, Math.sin(ang(0)) * R);
-  for (let i = 0; i < N; i++) {
-    const mid = ang(i) + Math.PI / N, nx = ang(i + 1);
-    shape.quadraticCurveTo(Math.cos(mid) * C, Math.sin(mid) * C, Math.cos(nx) * R, Math.sin(nx) * R);
-  }
-  const DEPTH = 0.5, BEV_T = 0.05;
-  const geo = new THREE.ExtrudeGeometry(shape, {
-    depth: DEPTH, curveSegments: 64, bevelEnabled: true,
-    bevelThickness: BEV_T, bevelSize: 0.03, bevelSegments: 6
-  });
-  geo.center();
-
-  /* indigo glass: real transmission, clear-coat, strong env reflections */
-  const glass = new THREE.MeshPhysicalMaterial({
-    color: 0x7b63ff, metalness: 0, roughness: 0.04,
-    transmission: 0.92, thickness: 0.7, ior: 1.45,
-    attenuationColor: new THREE.Color(0x4a2ee0), attenuationDistance: 2.4,
-    clearcoat: 1, clearcoatRoughness: 0.02, specularIntensity: 1,
-    envMapIntensity: 2.3,
-    side: THREE.DoubleSide          /* back faces show through the glass */
-  });
-  const star = new THREE.Mesh(geo, glass);
-
-  /* glowing white cross: one soft tapered streak per spike on the front face + centre glow */
-  function streakTexture() {
-    const c = document.createElement('canvas'); c.width = 256; c.height = 64;
-    const g = c.getContext('2d');
-    const h = g.createLinearGradient(0, 0, 256, 0);
-    h.addColorStop(0, 'rgba(255,255,255,1)'); h.addColorStop(0.55, 'rgba(255,255,255,.55)'); h.addColorStop(1, 'rgba(255,255,255,0)');
-    g.fillStyle = h; g.fillRect(0, 0, 256, 64);
-    g.globalCompositeOperation = 'destination-in';
-    const v = g.createLinearGradient(0, 0, 0, 64);
-    v.addColorStop(0, 'rgba(0,0,0,0)'); v.addColorStop(0.5, 'rgba(0,0,0,1)'); v.addColorStop(1, 'rgba(0,0,0,0)');
-    g.fillStyle = v; g.fillRect(0, 0, 256, 64);
-    const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t;
-  }
-  function glowTexture() {
-    const c = document.createElement('canvas'); c.width = c.height = 128;
-    const g = c.getContext('2d');
-    const r = g.createRadialGradient(64, 64, 0, 64, 64, 64);
-    r.addColorStop(0, 'rgba(255,255,255,1)'); r.addColorStop(0.25, 'rgba(255,255,255,.7)');
-    r.addColorStop(0.55, 'rgba(255,247,0,.22)'); r.addColorStop(1, 'rgba(255,247,0,0)');
-    g.fillStyle = r; g.fillRect(0, 0, 128, 128);
-    const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t;
-  }
-  const zf = DEPTH / 2 + BEV_T + 0.004;
-  const glowMat = (map) => new THREE.MeshBasicMaterial({ map, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, toneMapped: false });
-  const streakMat = glowMat(streakTexture());
-  for (let i = 0; i < N; i++) {
-    const L = 0.96, W = 0.2;
-    const m = new THREE.Mesh(new THREE.PlaneGeometry(L, W), streakMat);
-    const a = ang(i);
-    m.position.set(Math.cos(a) * L / 2, Math.sin(a) * L / 2, zf);
-    m.rotation.z = a; m.renderOrder = 3; star.add(m);
-  }
-  const core = new THREE.Mesh(new THREE.PlaneGeometry(0.9, 0.9), glowMat(glowTexture()));
-  core.position.z = zf + 0.002; core.renderOrder = 4; star.add(core);
-
-  /* tilt like the reference: face turned toward the camera, top edge leaning away so the glass wall shows underneath */
-  const tilt = new THREE.Group();
-  tilt.rotation.set(-0.85, 0.28, 0.0);
-  tilt.add(star); scene.add(tilt);
-
-  const rim = new THREE.DirectionalLight(0xFFF700, 0.9); rim.position.set(4, -3, 3); scene.add(rim);
-
-  function resize() {
-    const w = canvas.clientWidth || 300;
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
-    renderer.setSize(w, w, false);
-  }
-  resize();
-  if ('ResizeObserver' in window) new ResizeObserver(resize).observe(canvas); else window.addEventListener('resize', resize);
-
-  /* in-plane spin about the star's own z axis, same direction/speed as the reference (~20deg/s).
-     A 6-point star repeats every 60deg, so one PERIOD is a perfectly seamless loop. */
-  const PERIOD = 3, TAU = Math.PI * 2;
-  function pose(t) {
-    const u = (t % PERIOD) / PERIOD;
-    star.rotation.z = -u * (TAU / N);
-  }
-
-  let visible = true, running = false, last = 0, clock = 0;
-  new IntersectionObserver((e) => { visible = e[0].isIntersecting; kick(); }, { threshold: 0 }).observe(canvas);
-  document.addEventListener('visibilitychange', kick);
-  function covered() { return parseFloat(hero.style.getPropertyValue('--p')) > 0.97; }
-  function frame(now) {
-    if (!visible || document.hidden) { running = false; return; }
-    if (!last) last = now;
-    clock += Math.min(now - last, 50) / 1000; last = now;   /* clamp so a stalled tab never jumps */
-    if (!covered()) { pose(clock); renderer.render(scene, camera); }
-    requestAnimationFrame(frame);
-  }
-  function kick() { if (running || !visible || document.hidden || reduce) return; running = true; last = 0; requestAnimationFrame(frame); }
-
-  pose(0.6); renderer.render(scene, camera);
-  canvas.classList.add('ready');
-  kick();
-} catch (err) { /* WebGL or CDN unavailable: the hero simply shows without the star */ }
-</script>
 </body></html>
