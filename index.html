@@ -199,7 +199,7 @@ footer a:hover { color: var(--fg); }
 }
 .more-wrap { display: flex; justify-content: center; padding-top: clamp(28px, 4vw, 48px); }
 .more-btn svg { width: 16px; height: 16px; transition: transform .3s; }
-.more-btn[aria-expanded="true"] svg { transform: rotate(180deg); }
+.more-btn:hover svg { transform: translateX(4px); }
 .poster-more { column-width: 220px; column-gap: clamp(12px, 2vw, 24px); padding-top: clamp(28px, 4vw, 48px); }
 .poster-more[hidden] { display: none !important; }
 .poster-more .poster { break-inside: avoid; margin-bottom: clamp(16px, 2.4vw, 28px); }
@@ -276,6 +276,8 @@ footer a:hover { color: var(--fg); }
 .cert-info dd { margin: 4px 0 0; overflow-wrap: anywhere; }
 .cert-info dd a { border-bottom: 1px solid var(--line); transition: color .2s, border-color .2s; }
 .cert-info dd a:hover { color: var(--accent); border-color: var(--accent); }
+.cert-more { display: grid; gap: clamp(40px, 6vw, 80px); }
+.cert-more .cert-viewer { padding-top: clamp(28px, 4vw, 48px); border-top: 1px solid var(--line); }
 .cert-thumbs { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: clamp(12px, 2vw, 20px); }
 .cert-thumb { display: flex; flex-direction: column; gap: 10px; text-align: left; min-width: 0; }
 .cert-thumb .frame { aspect-ratio: 4 / 3; transition: border-color .3s; }
@@ -596,21 +598,15 @@ footer { background: #000; color: #f4f4f2; box-shadow: 0 0 0 100vmax #000; clip-
     </div>
     <!-- Featured 4 posters. Replace the image paths below with your own poster files. -->
     <div class="poster-bento">
-      <figure class="poster p1"><div class="frame"><img src="Images/Poster1.jpg" alt="Poster design 1" loading="lazy" onerror="this.remove()"></div></figure>
-      <figure class="poster p2"><div class="frame"><img src="Images/Poster2.jpg" alt="Poster design 2" loading="lazy" onerror="this.remove()"></div></figure>
-      <figure class="poster p3"><div class="frame"><img src="Images/Poster3.jpg" alt="Poster design 3" loading="lazy" onerror="this.remove()"></div></figure>
-      <figure class="poster p4"><div class="frame"><img src="Images/Poster4.jpg" alt="Poster design 4" loading="lazy" onerror="this.remove()"></div></figure>
-    </div>
-    <!-- Remaining posters live here. Copy a <figure> line to add more. The More / Show less button sits below them. -->
-    <div class="poster-bento" id="more-posters" hidden>
-      <figure class="poster p1"><div class="frame"><img src="Images/poster5.png" alt="Poster design 5" loading="lazy" onerror="this.remove()"></div></figure>
-      <figure class="poster p2"><div class="frame"><img src="Images/poster6.png" alt="Poster design 6" loading="lazy" onerror="this.remove()"></div></figure>
-      <figure class="poster p3"><div class="frame"><img src="Images/poster7.jpg" alt="Poster design 6" loading="lazy" onerror="this.remove()"></div></figure>
+      <figure class="poster p1"><div class="frame"><img src="Images/poster6.png" alt="Poster design 1" loading="lazy" onerror="this.remove()"></div></figure>
+      <figure class="poster p2"><div class="frame"><img src="Images/poster8.jpg" alt="Poster design 2" loading="lazy" onerror="this.remove()"></div></figure>
+      <figure class="poster p3"><div class="frame"><img src="Images/poster9.jpg" alt="Poster design 3" loading="lazy" onerror="this.remove()"></div></figure>
+      <figure class="poster p4"><div class="frame"><img src="Images/Poster3.jpg" alt="Poster design 4" loading="lazy" onerror="this.remove()"></div></figure>
     </div>
     <div class="more-wrap">
-      <button type="button" class="btn ghost more-btn" id="more-posters-btn" aria-expanded="false" aria-controls="more-posters">
-        <span id="more-posters-label">More posters</span>
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+      <button type="button" class="btn ghost more-btn" id="open-posters-btn" aria-haspopup="dialog" aria-controls="cs-posters">
+        <span>View all posters</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
       </button>
     </div>
   </section>
@@ -644,7 +640,7 @@ footer { background: #000; color: #f4f4f2; box-shadow: 0 0 0 100vmax #000; clip-
   <section class="block" id="certifications" aria-labelledby="cert-title">
     <div class="sec-head">
       <h2 id="cert-title">Certifications</h2>
-      <p class="mono">Click a certificate to view</p>
+      <p class="mono">Featured certificate</p>
     </div>
     <div class="cert-viewer" id="cert-viewer" aria-live="polite">
       <div class="frame" id="cert-frame"><span>Certificate image</span></div>
@@ -657,7 +653,12 @@ footer { background: #000; color: #f4f4f2; box-shadow: 0 0 0 100vmax #000; clip-
         </dl>
       </div>
     </div>
-    <div class="cert-thumbs" id="cert-thumbs"></div>
+    <div class="more-wrap">
+      <button type="button" class="btn ghost more-btn" id="open-certs-btn" aria-haspopup="dialog" aria-controls="cs-certs">
+        <span>View all certifications</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </button>
+    </div>
   </section>
 
   <!-- <section class="block" aria-labelledby="quote-title">
@@ -718,6 +719,51 @@ footer { background: #000; color: #f4f4f2; box-shadow: 0 0 0 100vmax #000; clip-
 
 <!-- Four independent case studies: each project has its own editable content block. -->
 <!-- Case study slides: Byte & Bean Tech Café. Put your slide images in Images/project1/ (slide-01.jpg, slide-02.jpg ...) or change the src paths. Add/remove <figure class="slide"> blocks freely. -->
+<!-- Certifications page: opens over the main page. The first certificate stays on the main page; the rest are listed here
+     (built from the CERTS list in the script). -->
+<div class="cs cs-certs" id="cs-certs" data-project="Certificates" role="dialog" aria-modal="true" aria-labelledby="cs-certs-title" hidden>
+  <div class="cs-bar">
+    <span class="mono">Certifications</span>
+    <button type="button" class="btn ghost cs-close" id="cs-certs-close">Close <span aria-hidden="true">✕</span></button>
+  </div>
+  <div class="cs-body">
+    <div class="cs-head">
+      <h2 class="title" id="cs-certs-title">More certifications</h2>
+      <p class="mono">Everything beyond the featured one</p>
+    </div>
+    <div class="cert-more" id="cert-more"></div>
+    <div class="cs-next">
+      <span class="mono">End of certifications</span>
+      <button type="button" class="btn">Back to portfolio <span aria-hidden="true">↑</span></button>
+    </div>
+  </div>
+</div>
+
+<!-- Poster design page: opens over the main page. Posters 1-4 stay on the main page; every other poster goes in here.
+     Copy a <figure> line to add more. -->
+<div class="cs cs-posters" id="cs-posters" data-project="Posters" role="dialog" aria-modal="true" aria-labelledby="cs-posters-title" hidden>
+  <div class="cs-bar">
+    <span class="mono">Poster design</span>
+    <button type="button" class="btn ghost cs-close" id="cs-posters-close">Close <span aria-hidden="true">✕</span></button>
+  </div>
+  <div class="cs-body">
+    <div class="cs-head">
+      <h2 class="title" id="cs-posters-title">More posters</h2>
+      <p class="mono">Everything beyond the featured four</p>
+    </div>
+    <div class="poster-more">
+      <figure class="poster"><div class="frame"><img src="Images/poster5.png" alt="Poster design 5" loading="lazy" onerror="this.remove()"></div></figure>
+      <figure class="poster"><div class="frame"><img src="Images/Poster1.jpg" alt="Poster design 6" loading="lazy" onerror="this.remove()"></div></figure>
+      <figure class="poster"><div class="frame"><img src="Images/Poster2.jpg" alt="Poster design 7" loading="lazy" onerror="this.remove()"></div></figure>
+      <figure class="poster"><div class="frame"><img src="Images/Poster4.jpg" alt="Poster design 7" loading="lazy" onerror="this.remove()"></div></figure>
+    </div>
+    <div class="cs-next">
+      <span class="mono">End of posters</span>
+      <button type="button" class="btn">Back to portfolio <span aria-hidden="true">↑</span></button>
+    </div>
+  </div>
+</div>
+
 <div class="cs cs-slides" id="cs-project-one" data-project="Project one" role="dialog" aria-modal="true" aria-label="Byte & Bean Tech Café case study" hidden>
   <div class="cs-bar">
     <span class="mono">Byte & Bean Tech Café</span>
@@ -942,6 +988,8 @@ footer { background: #000; color: #f4f4f2; box-shadow: 0 0 0 100vmax #000; clip-
   document.querySelectorAll('.card').forEach(function (c) {
     c.addEventListener('click', function () { openCase(c.getAttribute('data-project'), c); });
   });
+  var postersBtn = $('#open-posters-btn');
+  if (postersBtn) postersBtn.addEventListener('click', function () { openCase('Posters', postersBtn); });
   document.querySelectorAll('.cs-close, .cs-next button, .slides-end button').forEach(function (b) {
     b.addEventListener('click', closeCase);
   });
@@ -955,7 +1003,6 @@ footer { background: #000; color: #f4f4f2; box-shadow: 0 0 0 100vmax #000; clip-
     { img: 'Images/certificate (3).png', name: 'Photoshop for begginers', issuer: 'Cursa', id: 'e5e410e29298a7537cc50de06a287ed1', url: '' },
     { img: 'Images/certificate (4).png', name: 'Prompt Engineering', issuer: '1 Million Prompters', id: '', url: 'https://omp.dub.ai/certificate/CGaphYrBtPCr' }
   ];
-  var certFrame = $('#cert-frame'), certThumbs = $('#cert-thumbs');
   function certImg(c, alt) {
     var wrap = document.createDocumentFragment();
     var ph = document.createElement('span'); ph.textContent = c.name; wrap.appendChild(ph);
@@ -964,33 +1011,45 @@ footer { background: #000; color: #f4f4f2; box-shadow: 0 0 0 100vmax #000; clip-
     wrap.appendChild(im);
     return wrap;
   }
-  function showCert(i) {
-    var c = CERTS[i];
-    certFrame.innerHTML = ''; certFrame.appendChild(certImg(c, c.name + ' certificate'));
-    $('#cert-name').textContent = c.name;
-    $('#cert-issuer').textContent = c.issuer;
-    $('#cert-id').textContent = c.id || '—';
-    var u = $('#cert-url'); u.textContent = '';
+  function certInfo(c) {
+    var info = document.createElement('div'); info.className = 'cert-info';
+    var iss = document.createElement('p'); iss.className = 'mono'; iss.textContent = c.issuer;
+    var h = document.createElement('h3'); h.textContent = c.name;
+    var dl = document.createElement('dl');
+    var d1 = document.createElement('div'), t1 = document.createElement('dt'), v1 = document.createElement('dd');
+    t1.textContent = 'Credential ID'; v1.textContent = c.id || '—'; d1.appendChild(t1); d1.appendChild(v1);
+    var d2 = document.createElement('div'), t2 = document.createElement('dt'), v2 = document.createElement('dd');
+    t2.textContent = 'Credential URL';
     if (c.url) {
       var a = document.createElement('a'); a.href = c.url; a.target = '_blank'; a.rel = 'noopener';
-      a.textContent = c.url; u.appendChild(a);
-    } else { u.textContent = '—'; }
-    [].forEach.call(certThumbs.children, function (b, j) { b.setAttribute('aria-pressed', String(j === i)); });
+      a.textContent = c.url; v2.appendChild(a);
+    } else { v2.textContent = '—'; }
+    d2.appendChild(t2); d2.appendChild(v2);
+    dl.appendChild(d1); dl.appendChild(d2);
+    info.appendChild(iss); info.appendChild(h); info.appendChild(dl);
+    return info;
   }
-  CERTS.forEach(function (c, i) {
-    var b = document.createElement('button'); b.type = 'button'; b.className = 'cert-thumb';
-    b.setAttribute('aria-label', 'View certificate: ' + c.name);
-    var f = document.createElement('div'); f.className = 'frame'; f.appendChild(certImg(c, c.name));
-    var s = document.createElement('small'); s.textContent = c.name;
-    b.appendChild(f); b.appendChild(s);
-    b.addEventListener('click', function () {
-      showCert(i);
-      var v = $('#cert-viewer'), top = v.getBoundingClientRect().top;
-      if (top < 80) window.scrollBy({ top: top - 90, behavior: 'smooth' });
-    });
-    certThumbs.appendChild(b);
+  /* main page: the first certificate only */
+  var first = CERTS[0];
+  $('#cert-frame').innerHTML = ''; $('#cert-frame').appendChild(certImg(first, first.name + ' certificate'));
+  $('#cert-issuer').textContent = first.issuer;
+  $('#cert-name').textContent = first.name;
+  $('#cert-id').textContent = first.id || '—';
+  var u0 = $('#cert-url'); u0.textContent = '';
+  if (first.url) {
+    var a0 = document.createElement('a'); a0.href = first.url; a0.target = '_blank'; a0.rel = 'noopener';
+    a0.textContent = first.url; u0.appendChild(a0);
+  } else { u0.textContent = '—'; }
+  /* certifications page: all the others */
+  var certMore = $('#cert-more');
+  CERTS.slice(1).forEach(function (c) {
+    var row = document.createElement('div'); row.className = 'cert-viewer';
+    var f = document.createElement('div'); f.className = 'frame'; f.appendChild(certImg(c, c.name + ' certificate'));
+    row.appendChild(f); row.appendChild(certInfo(c));
+    certMore.appendChild(row);
   });
-  showCert(0);
+  var certsBtn = $('#open-certs-btn');
+  if (certsBtn) certsBtn.addEventListener('click', function () { openCase('Certificates', certsBtn); });
 
   /* ---- likes (stored in the database through /api) ---- */
   var likeBtn = $('#like-btn'), likeCount = $('#like-count'), likeLabel = $('#like-label');
@@ -1039,15 +1098,6 @@ footer { background: #000; color: #f4f4f2; box-shadow: 0 0 0 100vmax #000; clip-
   $('#like-skip').addEventListener('click', function () { sendLike(''); });
   modal.addEventListener('click', function (e) { if (e.target === modal) closeModal(); });
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !modal.hidden) closeModal(); });
-
-  /* ---- poster design: show / hide the remaining posters ---- */
-  var moreBtn = $('#more-posters-btn'), moreBox = $('#more-posters'), moreLabel = $('#more-posters-label');
-  moreBtn.addEventListener('click', function () {
-    var open = moreBox.hidden;
-    moreBox.hidden = !open;
-    moreBtn.setAttribute('aria-expanded', String(open));
-    moreLabel.textContent = open ? 'Show less' : 'More posters';
-  });
 
   var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
