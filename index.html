@@ -958,7 +958,8 @@ footer { background: #000; color: #f4f4f2; box-shadow: 0 0 0 100vmax #000; clip-
       if (lenis) lenis.stop();
       caseLenis = new Lenis({
         wrapper: cs, content: cs.querySelector('.cs-inner'),
-        duration: SCROLL_DURATION, easing: SCROLL_EASE, smoothWheel: true
+        duration: SCROLL_DURATION, easing: SCROLL_EASE, smoothWheel: true,
+        syncTouch: true, syncTouchLerp: 0.08, touchInertiaMultiplier: 30
       });
       (function raf(t) { if (!caseLenis) return; caseLenis.raf(t); requestAnimationFrame(raf); })(performance.now());
     }
@@ -1107,7 +1108,11 @@ footer { background: #000; color: #f4f4f2; box-shadow: 0 0 0 100vmax #000; clip-
   var lenis = null;
   document.querySelectorAll('.cs:not(.cs-slides)').forEach(function (el) { el.setAttribute('data-lenis-prevent', ''); });
   if (!reduce && window.Lenis) {
-    lenis = new Lenis({ duration: SCROLL_DURATION, easing: SCROLL_EASE, smoothWheel: true });
+    lenis = new Lenis({
+      duration: SCROLL_DURATION, easing: SCROLL_EASE, smoothWheel: true,
+      /* smooth, inertial scrolling for touch screens (phones / tablets) too */
+      syncTouch: true, syncTouchLerp: 0.08, touchInertiaMultiplier: 30
+    });
     (function raf(t) { lenis.raf(t); requestAnimationFrame(raf); })(performance.now());
 
     /* two mouse-wheel notches travel one screen (one section); trackpads keep a gentle 1:1 feel */
