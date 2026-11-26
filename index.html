@@ -167,14 +167,13 @@ footer a:hover { color: var(--fg); }
 
 /* UI/UX projects as bento tiles */
 .work-grid.bento { gap: clamp(12px, 2vw, 24px); align-items: stretch; }
-.work-grid.bento .card { background: var(--surface); border: 1px solid var(--line); border-radius: 20px; padding: clamp(12px, 1.6vw, 20px); gap: 18px; transition: border-color .3s, background .3s; }
-.work-grid.bento .card:hover { border-color: var(--muted); background: var(--surface-2); }
+.work-grid.bento .card { --fg: #f4f4f2; --muted: #a3a3a0; --line: #333330; --accent: #fff700; color: var(--fg); background: #1c1c1c; border: 0; border-radius: 20px; padding: clamp(12px, 1.6vw, 20px); gap: 18px; transition: transform .3s; }
+.work-grid.bento .card:hover { background: #1c1c1c; }
 .work-grid.bento .card .frame { aspect-ratio: 16 / 10; border-radius: 12px; }
 .work-grid.bento .card.narrow.offset { margin-top: 0; }
 .work-grid.bento .card-meta { padding-inline: 4px; padding-bottom: 4px; }
 @media (min-width: 900px) {
-  .work-grid.bento .card .frame { flex: 1 1 auto; aspect-ratio: auto; min-height: clamp(260px, 30vw, 440px); }
-  .work-grid.bento .card-meta { flex: none; }
+  .work-grid.bento .card .frame { min-height: clamp(260px, 30vw, 440px); }
 }
 
 /* poster design: bento grid + floating loop */
@@ -287,20 +286,19 @@ footer a:hover { color: var(--fg); }
 .cert-thumb[aria-pressed="true"] small { color: var(--fg); }
 
 /* like + modal */
-.like-wrap { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+.like-wrap { display: grid; gap: 12px; justify-items: start; }
+.like-row { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+.like-msg { min-height: 1.6em; color: var(--muted); font-family: var(--font-mono); font-size: 0.8125rem; letter-spacing: 0.06em; }
+.like-msg.err { color: #ff8a80; }
+.contact { position: relative; }
+.contact-star { position: absolute; right: 0; top: clamp(24px, 6vw, 80px); width: clamp(120px, 22vw, 320px); pointer-events: none; }
+.contact-star svg { display: block; width: 100%; height: auto; }
+.contact-star .spin { transform-box: fill-box; transform-origin: center; animation: artSpin 36s linear infinite; }
+@media (max-width: 720px) { .contact-star { width: 110px; top: 20px; } }
 .like-btn svg { width: 18px; height: 18px; flex: none; }
 .like-btn[aria-pressed="true"] { cursor: default; }
 .like-btn[aria-pressed="true"]:hover { transform: none; }
 .like-count { font-family: var(--font-mono); font-size: 0.8125rem; color: var(--muted); letter-spacing: 0.06em; }
-.modal { position: fixed; inset: 0; z-index: 60; display: grid; place-items: center; padding: var(--gutter); background: rgba(0,0,0,.72); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
-.modal[hidden] { display: none !important; }
-.modal-box { width: 100%; max-width: 440px; background: var(--surface-2); border: 1px solid var(--line); border-radius: 20px; padding: clamp(24px, 4vw, 36px); display: grid; gap: 16px; }
-.modal-box h3 { font-size: 1.75rem; }
-.modal-box p { color: var(--muted); }
-.modal-box input { width: 100%; height: 48px; padding-inline: 16px; border-radius: 12px; border: 1px solid var(--line); background: var(--bg); color: var(--fg); font: inherit; }
-.modal-box input:focus { outline: 2px solid var(--accent); outline-offset: 2px; }
-.modal-actions { display: flex; gap: 12px; flex-wrap: wrap; }
-.modal-err { color: #ff8a80; font-size: 0.875rem; min-height: 1.2em; }
 
 /* responsive */
 @media (max-width: 899px) { .cert-viewer { grid-template-columns: minmax(0, 1fr); } }
@@ -373,15 +371,21 @@ main > section:nth-of-type(even) {
 }
 footer { background: #000; color: #f4f4f2; box-shadow: 0 0 0 100vmax #000; clip-path: inset(0 -100vmax); }
 
-/* ===== Projects: images keep their actual size/ratio on every screen ===== */
-.work-grid.bento { align-items: start; }
+/* ===== Projects: solid cards, equal height per row, images keep their ratio and sit centred ===== */
+.work-grid.bento { align-items: stretch; }
 .work-grid.bento .card .frame {
-  display: block;
-  flex: none;
+  display: grid;
+  place-items: center;
+  flex: 1 1 auto;
   aspect-ratio: auto;
   min-height: 0;
   height: auto;
+  background: #1c1c1c;
+  border: 0;
 }
+.work-grid.bento .card .frame::before { display: none; }
+.work-grid.bento .card:hover .frame { border-color: transparent; }
+.work-grid.bento .card .card-meta { flex: none; margin-top: auto; }
 .work-grid.bento .card .frame img,
 .cs .frame img {
   position: relative;
@@ -661,21 +665,8 @@ footer { background: #000; color: #f4f4f2; box-shadow: 0 0 0 100vmax #000; clip-
     </div>
   </section>
 
-  <!-- <section class="block" aria-labelledby="quote-title">
-    <div class="sec-head">
-      <h2 id="quote-title">Kind words</h2>
-      <p class="mono">Testimonial</p>
-    </div>
-    <div class="quote-wrap">
-      <blockquote>I really like your design work! Everything looks clean, creative, and easy to use. Keep up the good work!</blockquote>
-      <div class="who">
-        <div class="frame r-1-1"><img src="Images/testimonial.jpg"></div>
-        <div><b>Nandhana B</b><small>Digital Marketer</small></div>
-      </div>
-    </div>
-  </section> -->
-
   <section class="block contact" id="contact" aria-labelledby="contact-title">
+    <div class="contact-star" aria-hidden="true"><svg viewBox="0 0 240 240"><g transform="translate(120 120)"><g class="spin"><path d="M100 0 Q90 82.7 13.4 50 Q80 100 13.4 150 Q90 117.3 100 200 Q110 117.3 186.6 150 Q120 100 186.6 50 Q110 82.7 100 0Z" fill="#14083f" transform="translate(-100 -100)"/><path d="M100 0 Q90 82.7 13.4 50 Q80 100 13.4 150 Q90 117.3 100 200 Q110 117.3 186.6 150 Q120 100 186.6 50 Q110 82.7 100 0Z" fill="#6b4fff" transform="scale(0.86) translate(-100 -100)"/><path d="M100 0 Q90 82.7 13.4 50 Q80 100 13.4 150 Q90 117.3 100 200 Q110 117.3 186.6 150 Q120 100 186.6 50 Q110 82.7 100 0Z" fill="#c9c0ff" opacity="0.8" transform="scale(0.46) translate(-100 -100)"/></g></g></svg></div>
     <p class="mono">Contact</p>
     <h2 id="contact-title">Have a project in mind?</h2>
     <div class="mail-row">
@@ -689,26 +680,16 @@ footer { background: #000; color: #f4f4f2; box-shadow: 0 0 0 100vmax #000; clip-
       <a href="https://www.instagram.com/4dithh____/" target="_blank" rel="noopener">Instagram <span aria-hidden="true">↗</span></a>
     </div>
     <div class="like-wrap">
+     <div class="like-row">
       <button type="button" class="btn like-btn" id="like-btn" aria-pressed="false">
         <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 21s-7.5-4.6-9.6-9.2C.9 8.5 2.6 5 6 5c2 0 3.4 1 4 2.2h4C14.6 6 16 5 18 5c3.4 0 5.1 3.500 3.600 6.800C19.500 16.400 12 21 12 21z"/></svg>
         <span id="like-label">Like my portfolio</span>
       </button>
       <span class="like-count" id="like-count" aria-live="polite">28k likes</span>
+     </div>
+     <p class="like-msg" id="like-msg" aria-live="polite"></p>
     </div>
   </section>
-
-  <div class="modal" id="like-modal" role="dialog" aria-modal="true" aria-labelledby="like-title" hidden>
-    <form class="modal-box" id="like-form">
-      <h3 id="like-title">Thanks for the like!</h3>
-      <p>Mind sharing your name? It's optional, you can skip.</p>
-      <input type="text" id="like-name" name="name" maxlength="60" placeholder="Your name" autocomplete="name">
-      <p class="modal-err" id="like-err" role="alert"></p>
-      <div class="modal-actions">
-        <button type="submit" class="btn" id="like-submit">Submit</button>
-        <button type="button" class="btn ghost" id="like-skip">Skip</button>
-      </div>
-    </form>
-  </div>
 
 </main>
 
@@ -954,10 +935,10 @@ footer { background: #000; color: #f4f4f2; box-shadow: 0 0 0 100vmax #000; clip-
     if (img.complete && img.naturalWidth === 0 && img.getAttribute('src')) markEmpty(img);
   });
   function startSlides(cs) {
-    if (!reduce && window.Lenis) {
+    if (!reduce && !isMobile && window.Lenis) {
       if (lenis) lenis.stop();
       caseLenis = new Lenis({
-        wrapper: cs, content: cs.querySelector('.cs-inner'),
+        wrapper: cs, content: cs.querySelector('.cs-inner') || cs.querySelector('.cs-body'),
         duration: SCROLL_DURATION, easing: SCROLL_EASE, smoothWheel: true,
         syncTouch: true, syncTouchLerp: 0.14, touchInertiaMultiplier: 60
       });
@@ -975,7 +956,7 @@ footer { background: #000; color: #f4f4f2; box-shadow: 0 0 0 100vmax #000; clip-
     activeCase.hidden = false;
     activeCase.scrollTop = 0;
     document.documentElement.style.overflow = 'hidden';
-    if (activeCase.classList.contains('cs-slides')) startSlides(activeCase);
+    startSlides(activeCase);
     activeCase.querySelector('.cs-close').focus();
   }
   function closeCase() {
@@ -1054,11 +1035,12 @@ footer { background: #000; color: #f4f4f2; box-shadow: 0 0 0 100vmax #000; clip-
 
   /* ---- likes (stored in the database through /api) ---- */
   var likeBtn = $('#like-btn'), likeCount = $('#like-count'), likeLabel = $('#like-label');
-  var modal = $('#like-modal'), likeName = $('#like-name'), likeErr = $('#like-err'), likeSubmit = $('#like-submit');
+  var likeMsg = $('#like-msg');
   function liked() { try { return localStorage.getItem('portfolio-liked') === '1'; } catch (e) { return false; } }
   function setLiked() {
     try { localStorage.setItem('portfolio-liked', '1'); } catch (e) {}
-    likeBtn.setAttribute('aria-pressed', 'true'); likeLabel.textContent = 'Thanks for the like!';
+    likeBtn.setAttribute('aria-pressed', 'true');
+    likeMsg.classList.remove('err'); likeMsg.textContent = 'Thanks for the like!';
   }
   var defaultLikes = 28000;
   function renderCount(n) {
@@ -1080,34 +1062,19 @@ footer { background: #000; color: #f4f4f2; box-shadow: 0 0 0 100vmax #000; clip-
       renderCount(0);
     });
   }
-  if (liked()) { likeBtn.setAttribute('aria-pressed', 'true'); likeLabel.textContent = 'Thanks for the like!'; }
+  if (liked()) { likeBtn.setAttribute('aria-pressed', 'true'); likeMsg.textContent = 'Thanks for the like!'; }
   loadCount();
-  function openModal() { likeErr.textContent = ''; likeName.value = ''; modal.hidden = false; likeName.focus(); }
-  function closeModal() { modal.hidden = true; likeBtn.focus(); }
-  function sendLike(name) {
-    likeSubmit.disabled = true;
-    return fetch(API_BASE_URL + '/api/like', {
-      method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name: name })
-    }).then(function (r) { if (!r.ok) throw new Error(); return r.json(); })
-      .then(function (d) { renderCount(d.count); setLiked(); closeModal(); })
-      .catch(function () { likeErr.textContent = 'Could not save your like right now. Please try again.'; })
-      .then(function () { likeSubmit.disabled = false; });
-  }
-  likeBtn.addEventListener('click', function () { openModal(); });
-  $('#like-form').addEventListener('submit', function (e) { e.preventDefault(); sendLike(likeName.value.trim()); });
-  $('#like-skip').addEventListener('click', function () { sendLike(''); });
-  modal.addEventListener('click', function (e) { if (e.target === modal) closeModal(); });
-  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !modal.hidden) closeModal(); });
+  likeBtn.addEventListener('click', function () { if (!liked()) setLiked(); });
 
   var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  /* phones / tablets use plain native scrolling; smooth (Lenis) scrolling is for desktop screens only */
+  var isMobile = window.matchMedia && window.matchMedia('(hover: none) and (pointer: coarse)').matches;
 
   /* ---- ultra-smooth, slower scrolling ---- */
   var SCROLL_DURATION = 1.9;
   var SCROLL_EASE = function (t) { return 1 - Math.pow(1 - t, 4); };
   var lenis = null;
-  document.querySelectorAll('.cs:not(.cs-slides)').forEach(function (el) { el.setAttribute('data-lenis-prevent', ''); });
-  if (!reduce && window.Lenis) {
+  if (!reduce && !isMobile && window.Lenis) {
     lenis = new Lenis({
       duration: SCROLL_DURATION, easing: SCROLL_EASE, smoothWheel: true,
       /* smooth, inertial scrolling for touch screens (phones / tablets) too */
@@ -1144,7 +1111,7 @@ footer { background: #000; color: #f4f4f2; box-shadow: 0 0 0 100vmax #000; clip-
         y = naturalTop(t);
       }
       e.preventDefault();
-      if (lenis) lenis.scrollTo(y); else window.scrollTo({ top: y, behavior: reduce ? 'auto' : 'smooth' });
+      if (lenis) lenis.scrollTo(y); else window.scrollTo({ top: y, behavior: (reduce || isMobile) ? 'auto' : 'smooth' });
     });
   });
 
